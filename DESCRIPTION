@@ -1,0 +1,31 @@
+Package: visualizeR
+Depends:
+    R(>= 3.1.0),
+    transformeR(>= 1.4.6)
+Imports:    
+Suggests:
+Type: Package
+Title: Visualizing climate4R data and Communicating Uncertainty in Seasonal Climate Prediction
+Version: 1.4.0
+Date: 2019-07-09
+Author: as.person(c(
+    "Santander Meteorology Group <http://meteo.unican.es> [cph]",
+    "María Dolores Frías <friasmd@unican.es> [aut, cre]",
+    "Jesús Fernández <fernandej@unican.es> [aut]",
+    "Maialen Iturbide <miturbide@ifca.unican.es> [aut]",
+    "Joaquín Bedia <bediaj@unican.es> [aut]",
+    "Max Tuni <max@predictia.es> [ctb]",
+    "Sixto Herrera <sixto@predictia.es> [ctb]",
+    "Rodrigo Manzanas <rmanzanas@ifca.unican.es> [ctb]",
+    "Antonio Cofiño <antonio.cofino@unican.es> [ctb]",
+    "José Manuel Gutiérrez <gutierjm@unican.es> [ctb]",
+    "Andrea Taylor <A.L.Taylor@leeds.ac.uk> [ctb]",
+    "Aidan Slingsby <a.slingsby@city.ac.uk> [ctb]"))
+Maintainer: Maialen Iturbide <miturbide@ifca.unican.es>
+BugReports: https://github.com/SantanderMetGroup/visualizeR/issues
+URL: https://github.com/SantanderMetGroup/visualizeR/wiki
+Description: Implementation of seasonal climate verification plots.
+License: file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
