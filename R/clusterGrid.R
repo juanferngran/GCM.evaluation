@@ -11,7 +11,7 @@
 #'@param centers The number of clusters, \strong{k}, or center points.  
 #'@param iter.max the maximum number of iterations allowed for K-means algorithm 
 #'@param nstart (for K-means algorithm) if centers is a number, how many random sets should be chosen?
-#'@seealso Clustering Algorthim Help: \link{kmeans} 
+#'@seealso Clustering Algorthim Help: \link[stats]{kmeans} 
 #'@return A new grid object that contains the clusters created using the specified algorithm. 
 #'@details For further information see \link{kmeans} function.
 #'@keywords 
