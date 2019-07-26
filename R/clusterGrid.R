@@ -7,7 +7,7 @@
 #' (possibly multimember grids) as returned e.g. by \code{loadeR.ECOMS::loadECOMS}.
 #'@param type Selects the clustering algorithm between k-means and hierarchical clustering. 
 #' The possible values for 'type' are "\strong{kmeans}", "\strong{hierarchical}", or NULL. It chooses K-means by default. 
-#' See details for further information.
+#' See 'Details' for further information.
 #'@param centers The number of clusters, \strong{k}, or center points.  
 #'@param iter.max the maximum number of iterations allowed for K-means algorithm 
 #'@param nstart (for K-means algorithm) if centers is a number, how many random sets should be chosen?
@@ -27,7 +27,7 @@
 #'spatialPlot(mg, backdrop.theme = "coastline", rev.colors = T, layout = c(2,5))
 
 
-clusterGrid <- function(grid, type="kmeans", centers, iter.max=10, nstart=1){
+clusterGrid <- function(grid, type="kmeans", centers, iter.max=10, nstart=1, method = "complete"){
   
   #Argumento Type: para distinguir entre Kmeans, jerarquico, som (redes neuronales  ). 
   #if type=empty -> Kmeans by default
@@ -41,7 +41,17 @@ clusterGrid <- function(grid, type="kmeans", centers, iter.max=10, nstart=1){
     Y <- mat2Dto3Darray(kmModel$centers, grid$xyCoords$x, grid$xyCoords$y)
     
   }else if (type == "hierarchical"){
-    hc <- hclust(dist(grid.2D), "cen")
+    hc <- hclust(dist(grid.2D), method)
+    if(is.null(centers)){
+      #Auto-calculation of the number of clusters: Quartile method applied
+      quantile.range<-quantile(hc$height, c(0.25,0.75))
+      hc.height.diff<-numeric(length(hc$height)-1)
+      for (i in 1:length(hc$height)){
+        hc.height.diff[i]<-hc$height[i+1]-hc$height[i]
+      }
+      index <- which(hc.height.diff > (quantile.range[[2]]-quantile.range[[1]]))
+      centers <- length(hc$order)-index[[1]]
+    }
     memb <- cutree(hc, k = centers) #Found the corresponding cluster for every element
     cent <- NULL
     for(k in 1:centers){   #Set up the centers of the clusters
@@ -49,7 +59,12 @@ clusterGrid <- function(grid, type="kmeans", centers, iter.max=10, nstart=1){
     }
     Y <- mat2Dto3Darray(cent, grid$xyCoords$x, grid$xyCoords$y)
     
-  }else {
+  }else if (type == "som"){
+    
+    
+    
+    
+  } else {
     stop("Input data is not valid.\n'", paste(type),"' is not a valid algorithm")
   }
   
@@ -58,13 +73,9 @@ clusterGrid <- function(grid, type="kmeans", centers, iter.max=10, nstart=1){
   aux <- grid
   aux$Data <- Y
   attr(aux, "cluster_type")<- type
-  #Add heights for hierarchical
-  if(is.null(type) | type == "kmeans"){
-    
-  }else if (type == "hierarchical"){
-    
-  }else {
-    
+  #Add heights for hierarchical as attribute
+  if(type == "hierarchical"){
+    attr(aux, "height")<- hc$height
   }
   
   aux$Variable$varName<-"clusters"
