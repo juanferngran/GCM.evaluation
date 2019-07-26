@@ -5,9 +5,9 @@
 #' returned e.g. by \code{loadeR::loadGridData} (or \code{loadeR::loadStationData}), a
 #' multigrid, as returned by \code{makeMultiGrid}, or other types of multimember grids
 #' (possibly multimember grids) as returned e.g. by \code{loadeR.ECOMS::loadECOMS}.
-#'@param type Selects the clustering algorithm between \strong{K-means} and \strong{Hierarchical} clustering. 
-#' The possible values for 'type' are "kmeans", "Hierarchical", or NULL. It chooses K-means algorithm by default 
-#' or if \code{type = NULL}. 
+#'@param type Selects the clustering algorithm between k-means and hierarchical clustering. 
+#' The possible values for 'type' are "\strong{kmeans}", "\strong{hierarchical}", or NULL. It chooses K-means by default. 
+#' See details for further information.
 #'@param centers The number of clusters, \strong{k}, or center points.  
 #'@param iter.max the maximum number of iterations allowed for K-means algorithm 
 #'@param nstart (for K-means algorithm) if centers is a number, how many random sets should be chosen?
@@ -32,6 +32,7 @@ clusterGrid <- function(grid, type="kmeans", centers, iter.max=10, nstart=1){
   #Argumento Type: para distinguir entre Kmeans, jerarquico, som (redes neuronales  ). 
   #if type=empty -> Kmeans by default
   
+  type=tolower(type)
   grid.2D <- array3Dto2Dmat(grid$Data) #From 3D to 2D. pasamos a 2D ya qyue Kmeans trabaja con matrices.
   
   if(is.null(type) | type == "kmeans"){
@@ -56,13 +57,14 @@ clusterGrid <- function(grid, type="kmeans", centers, iter.max=10, nstart=1){
   #Setting up metadata for Y
   aux <- grid
   aux$Data <- Y
-  
+  attr(aux, "cluster_type")<- type
+  #Add heights for hierarchical
   if(is.null(type) | type == "kmeans"){
-    attr(aux, "cluster_type")<- "K-means"
+    
   }else if (type == "hierarchical"){
-    attr(aux, "cluster_type")<- "Hierarchical"
+    
   }else {
-    stop(" ")
+    
   }
   
   aux$Variable$varName<-"clusters"
