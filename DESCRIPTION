@@ -1,13 +1,14 @@
-Package: visualizeR
+Package: clusteR
 Depends:
     R(>= 3.1.0),
     transformeR(>= 1.4.6)
+    visualizeR(>= 1.4.0)
 Imports:    
 Suggests:
 Type: Package
 Title: Visualizing climate4R data and Communicating Uncertainty in Seasonal Climate Prediction
-Version: 1.4.0
-Date: 2019-07-09
+Version: 1.0
+Date: 2019-08-02
 Author: as.person(c(
     "Santander Meteorology Group <http://meteo.unican.es> [cph]",
     "María Dolores Frías <friasmd@unican.es> [aut, cre]",

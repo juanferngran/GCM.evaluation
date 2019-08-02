@@ -5,14 +5,14 @@
 #' returned e.g. by \code{loadeR::loadGridData} (or \code{loadeR::loadStationData}), a
 #' multigrid, as returned by \code{makeMultiGrid}, or other types of multimember grids
 #' (possibly multimember grids) as returned e.g. by \code{loadeR.ECOMS::loadECOMS}.
-#'@param type Selects the clustering algorithm between k-means and hierarchical clustering. 
-#' The possible values for 'type' are "\strong{kmeans}", "\strong{hierarchical}", "\strong{SOM}", or NULL. It chooses
-#' K-means by default. See 'Details' for further information.
-#'@param centers The number of clusters, \strong{k}, or center points. If SOM clustering is choosen, a two-component 
-#'vector of integers will be needed. See Details. 
+#'@param type Selects the clustering algorithm between k-means, hierarchical and som clustering. 
+#' The possible values for 'type' are "\strong{kmeans}", "\strong{hierarchical}", "\strong{som}". It chooses
+#' K-means by default.
+#'@param centers The number of clusters, \strong{k}, or center points. It cannot be empty for kmeans. See Details for
+#'Hierarchical and SOM.  
 #'@param iter.max the maximum number of iterations allowed for K-means algorithm 
 #'@param nstart (for K-means algorithm) if centers is a number, how many random sets should be chosen?
-#'@param method the agglomeration method to be used in hierarchical. This should be one of "ward.D", "ward.D2", "single",
+#'@param method the agglomeration method to be used in Hierarchical. This should be one of "ward.D", "ward.D2", "single",
 #'"complete", "average", "mcquitty", "median" or "centroid". It chooses "complete" by default. 
 #'@seealso Clustering Algorithm Help: \link[stats]{kmeans}, \link[stats]{hclust}, \link[kohonen]{som}.
 #'@return A new grid object that contains the clusters created using the specified algorithm. 
@@ -22,6 +22,7 @@
 #'automatically taking into account quantiles criteria. The function \link[stats]{quantile} is used to obtain 
 #'quartiles at 0.25 and 0.75 and this is used as the height-difference threshold where to cut the tree into clusters 
 #'by using \link[stats]{cutree}. If the user sets the numbers of clusters, clusterGrid() prioritize user's decision. 
+#'
 #'While using SOM (check \link[kohonen]{som} for further information) the function calculates 
 #'48 clusters (8x6) by default with rectangular topology. The user can modified the number of clusters obtained
 #'by passing a two-component vector of integers to the input argument 'centers'. 
@@ -31,7 +32,7 @@
 #'@importFrom transformeR getShape aggregateGrid isRegular
 #'@examples #Example of the implementation of K-means clustering and their representation: 
 #'grid<-loadGridData(dataset , var = "grid")
-#'clusters<- clusterGrid(grid, kmeans, 10, 1000, 1)
+#'clusters<- clusterGrid(grid, type="kmeans", centers=10, iter.max=1000)
 #'cluster.grids <- lapply(1:10, function(i) {
 #'   subsetDimension(clusters, dimension="time", indices=i)})
 #'mg <- do.call("makeMultiGrid", c(cluster.grids, skip.temporal.check = TRUE))
