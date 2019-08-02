@@ -48,7 +48,7 @@ by passing a two-component vector of integers to the input argument 'centers'.
 \examples{
 #Example of the implementation of K-means clustering and their representation: 
 grid<-loadGridData(dataset , var = "grid")
-clusters<- clusterGrid(grid, kmeans, 10, 1000, 1)
+clusters<- clusterGrid(grid, type="kmeans", centers=10, iter.max=1000)
 cluster.grids <- lapply(1:10, function(i) {
   subsetDimension(clusters, dimension="time", indices=i)})
 mg <- do.call("makeMultiGrid", c(cluster.grids, skip.temporal.check = TRUE))

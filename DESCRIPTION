@@ -1,7 +1,7 @@
 Package: clusteR
 Depends:
     R(>= 3.1.0),
-    transformeR(>= 1.4.6)
+    transformeR(>= 1.4.6),
     visualizeR(>= 1.4.0)
 Imports:    
 Suggests:
