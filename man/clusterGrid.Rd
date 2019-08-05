@@ -4,7 +4,7 @@
 \alias{clusterGrid}
 \title{Cluster Grid Implementation}
 \usage{
-clusterGrid(grid, type = "kmeans", centers, iter.max = 10,
+clusterGrid(grid, type = "kmeans", centers = NULL, iter.max = 10,
   nstart = 1, method = "complete")
 }
 \arguments{

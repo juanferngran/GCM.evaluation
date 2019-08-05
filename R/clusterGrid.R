@@ -39,7 +39,7 @@
 #'spatialPlot(mg, backdrop.theme = "coastline", rev.colors = T, layout = c(2,5))
 
 
-clusterGrid <- function(grid, type="kmeans", centers, iter.max=10, nstart=1, method = "complete"){
+clusterGrid <- function(grid, type="kmeans", centers=NULL, iter.max=10, nstart=1, method = "complete"){
   
   #Argumento Type: para distinguir entre Kmeans, jerarquico, som (redes neuronales  ). 
   #if type=empty -> Kmeans by default
@@ -58,7 +58,7 @@ clusterGrid <- function(grid, type="kmeans", centers, iter.max=10, nstart=1, met
       #Auto-calculation of the number of clusters: Quartile method applied
       quantile.range<-quantile(hc$height, c(0.25,0.75))
       hc.height.diff<-numeric(length(hc$height)-1)
-      for (i in 1:length(hc$height)){
+      for (i in 1:length(hc$height)-1){
         hc.height.diff[i]<-hc$height[i+1]-hc$height[i]
       }
       index <- which(hc.height.diff > (quantile.range[[2]]-quantile.range[[1]]))
@@ -72,13 +72,15 @@ clusterGrid <- function(grid, type="kmeans", centers, iter.max=10, nstart=1, met
     Y <- mat2Dto3Darray(cent, grid$xyCoords$x, grid$xyCoords$y)
     
   }else if (type == "som"){
-    if(length(centers)!=2){
-      stop("in 'centers'.\n Unexpected lenght for this argument while using SOM. It must be a vector of 2 elements")
-    }else{
+    if(is.null(centers)){
+      som.grid<-som(grid.2D)
+    }else {
+      if(length(centers)!=2){
+        stop("in 'centers'.\n Unexpected lenght for this argument while using SOM. It must be a vector of 2 elements")
+      }
       som.grid<-som(grid.2D, somgrid(xdim=centers[1],ydim=centers[2],topo="rectangular"))
-      Y <- mat2Dto3Darray(som.grid$codes[[1]], grid$xyCoords$x, grid$xyCoords$y)
     }
-    
+    Y <- mat2Dto3Darray(som.grid$codes[[1]], grid$xyCoords$x, grid$xyCoords$y)
   } else {
     stop("Input data is not valid.\n'", paste(type),"' is not a valid algorithm")
   }
