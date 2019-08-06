@@ -57,14 +57,16 @@ Otherwise, by default 48 clusters (8x6) with rectangular topology are obtained.
 #Example of K-means clustering: 
 grid<-loadGridData(dataset , var = "grid")
 clusters<- clusterGrid(grid, type="kmeans", centers=10, iter.max=1000)
-cluster.grids <- lapply(1:10, function(i) {
-  subsetDimension(clusters, dimension="time", indices=i)})
+cluster.grids <- lapply(1:attr(clusters, "centers"), function(i) {
+ subsetDimension(clusters, dimension="time", indices=i)})
 mg <- do.call("makeMultiGrid", c(cluster.grids, skip.temporal.check = TRUE))
-spatialPlot(mg, backdrop.theme = "coastline", rev.colors = T, layout = c(2,5))
+spatialPlot(mg, backdrop.theme = "coastline", rev.colors = T, layout = c(2,ceiling(attr(clusters, "centers")/2)))
+
 #Example of hierarchical clustering: 
-...
+clusters<- clusterGrid(grid, type="hierarchical")
+
 #Example of som clustering: 
-...
+clusters<- clusterGrid(grid, type="som", centers = c(10,1))
 }
 \seealso{
 \link[stats]{kmeans}, \link[stats]{hclust}, \link[kohonen]{som}.

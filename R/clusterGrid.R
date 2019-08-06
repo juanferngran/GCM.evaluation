@@ -59,25 +59,27 @@
 #'@examples #Example of K-means clustering: 
 #'grid<-loadGridData(dataset , var = "grid")
 #'clusters<- clusterGrid(grid, type="kmeans", centers=10, iter.max=1000)
-#'cluster.grids <- lapply(1:10, function(i) {
-#'   subsetDimension(clusters, dimension="time", indices=i)})
+#'cluster.grids <- lapply(1:attr(clusters, "centers"), function(i) {
+#'  subsetDimension(clusters, dimension="time", indices=i)})
 #'mg <- do.call("makeMultiGrid", c(cluster.grids, skip.temporal.check = TRUE))
-#'spatialPlot(mg, backdrop.theme = "coastline", rev.colors = T, layout = c(2,5))
+#'spatialPlot(mg, backdrop.theme = "coastline", rev.colors = T, layout = c(2,ceiling(attr(clusters, "centers")/2)))
+#'
 #'#Example of hierarchical clustering: 
-#'...
+#'clusters<- clusterGrid(grid, type="hierarchical")
+#'
 #'#Example of som clustering: 
-#'...
+#'clusters<- clusterGrid(grid, type="som", centers = c(10,1))
 
 
 clusterGrid <- function(grid, type="kmeans", centers=NULL, iter.max=10, nstart=1, method = "complete"){
   
-  #Argumento Type: para distinguir entre Kmeans, jerarquico, som (redes neuronales  ). 
-  #if type=empty -> Kmeans by default
-  
   type=tolower(type)
-  grid.2D <- array3Dto2Dmat(grid$Data) #From 3D to 2D. pasamos a 2D ya qyue Kmeans trabaja con matrices.
+  grid.2D <- array3Dto2Dmat(grid$Data) #From 3D to 2D
   
   if(is.null(type) | type == "kmeans"){
+    if (is.null(centers)){
+      stop("in 'centers'.\n In K-means the number of clusters ('centers') needs to be provided")
+    }
     kmModel <- kmeans(grid.2D, centers, iter.max = iter.max, nstart =nstart) #Datos de entrenamiento en KNN     
     #Going back from 2D to 3D:
     Y <- mat2Dto3Darray(kmModel$centers, grid$xyCoords$x, grid$xyCoords$y)
@@ -92,7 +94,7 @@ clusterGrid <- function(grid, type="kmeans", centers=NULL, iter.max=10, nstart=1
         hc.height.diff[i]<-hc$height[i+1]-hc$height[i]
       }
       index <- which(hc.height.diff > (quantile.range[[2]]-quantile.range[[1]]))
-      centers <- length(hc$order)-index[[1]]
+      centers <- length(hc$order)-index[1]
     }
     memb <- cutree(hc, k = centers) #Found the corresponding cluster for every element
     cent <- NULL
@@ -118,13 +120,26 @@ clusterGrid <- function(grid, type="kmeans", centers=NULL, iter.max=10, nstart=1
   #Setting up metadata for Y
   aux <- grid
   aux$Data <- Y
-  attr(aux, "cluster_type")<- type
-  #Add heights for hierarchical as attribute
-  if(type == "hierarchical"){
-    attr(aux, "height")<- hc$height
-  }
-  
+  attr(aux, "cluster.type")<- type
   aux$Variable$varName<-"clusters"
+  
+  #Add heights for hierarchical as attribute
+  if(is.null(type) | type == "kmeans"){
+    attr(aux, "centers")<- centers
+    attr(aux, "withinss")<- kmModel$withinss
+    attr(aux, "betweenss")<- kmModel$betweenss
+  }else if(type == "hierarchical"){
+    attr(aux, "centers")<- centers
+    attr(aux, "height")<- hc$height
+    attr(aux, "cutree.at.height")<- hc$height[index[1]+1] #the previous heigth divides in "centers" numb. of clusters 
+    attr(aux, "diff.height.threshold")<- (quantile.range[[2]]-quantile.range[[1]])
+  }else if (type == "som"){
+    if (is.null(centers)){
+      attr(aux, "centers")<- 6*8
+    }else {
+      attr(aux, "centers")<- centers[1]*centers[2]
+    }
+  }
 
   return(aux)
 
