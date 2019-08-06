@@ -2,60 +2,72 @@
 % Please edit documentation in R/clusterGrid.R
 \name{clusterGrid}
 \alias{clusterGrid}
-\title{Cluster Grid Implementation}
+\title{Cluster analysis of grids}
 \usage{
 clusterGrid(grid, type = "kmeans", centers = NULL, iter.max = 10,
   nstart = 1, method = "complete")
 }
 \arguments{
-\item{grid}{The input grid or station data to be subset. This is either a grid (or station data), as 
+\item{grid}{A grid (gridded or station dataset), multigrid, multimember grid or multimember multigrid object, as 
 returned e.g. by \code{loadeR::loadGridData} (or \code{loadeR::loadStationData}), a
 multigrid, as returned by \code{makeMultiGrid}, or other types of multimember grids
 (possibly multimember grids) as returned e.g. by \code{loadeR.ECOMS::loadECOMS}.}
 
-\item{type}{Selects the clustering algorithm between k-means, hierarchical and som clustering. 
-The possible values for 'type' are "\strong{kmeans}", "\strong{hierarchical}", "\strong{som}". It chooses
-K-means by default.}
+\item{type}{Clustering algorithm to be used for the cluster analysis. 
+Possible values are "\strong{kmeans}" (default), "\strong{hierarchical}", "\strong{som}". 
+The core functions are \link[stats]{kmeans}, \link[stats]{hclust}, \link[kohonen]{som}, respectively. See Details.}
 
-\item{centers}{The number of clusters, \strong{k}, or center points. It cannot be empty for kmeans. See Details for
-Hierarchical and SOM.}
+\item{centers}{Integer value indicating the number of clusters, \strong{k}, or center points. See Details.}
 
-\item{iter.max}{the maximum number of iterations allowed for K-means algorithm}
+\item{iter.max}{(for the K-means algorithm) Integer value indicating the maximum number of iterations allowed. Default: 10.}
 
-\item{nstart}{(for K-means algorithm) if centers is a number, how many random sets should be chosen?}
+\item{nstart}{(for the K-means algorithm) If centers is a number, how many random sets should be chosen? Default: 1.}
 
-\item{method}{the agglomeration method to be used in Hierarchical. This should be one of "ward.D", "ward.D2", "single",
-"complete", "average", "mcquitty", "median" or "centroid". It chooses "complete" by default.}
+\item{method}{(for the hierarchical algorithm) Agglomeration method to be used, one of "complete" (default), "ward.D", "ward.D2", "single",
+"average", "mcquitty", "median" or "centroid".}
 }
 \value{
 A new grid object that contains the clusters created using the specified algorithm.
+The clustering type, number of clusters and other algorithm-specific parameters are provided as attributes.
 }
 \description{
-This function creates a grid of clusters from another grid. The user will choose the clustering algorithm.
+Performs cluster analysis of grids, multigrids or multimember multigrids. Several clustering algorithms are available.
 }
 \details{
-While using Hierarchical (check \link[stats]{hclust} for further information) clusterGrid() allows the 
-user either to especified the numbers of clusters to be obtained or not. In the case that the user does not set 
-input 'centers' to a integer value, that is to determine the number of clusters, this will be calculated  
-automatically taking into account quantiles criteria. The function \link[stats]{quantile} is used to obtain 
-quartiles at 0.25 and 0.75 and this is used as the height-difference threshold where to cut the tree into clusters 
-by using \link[stats]{cutree}. If the user sets the numbers of clusters, clusterGrid() prioritize user's decision. 
+\strong{kmeans}
 
-While using SOM (check \link[kohonen]{som} for further information) the function calculates 
-48 clusters (8x6) by default with rectangular topology. The user can modified the number of clusters obtained
-by passing a two-component vector of integers to the input argument 'centers'.
+While using the  K-means algorithm, the number of clusters (argument 'centers') needs to be provided (no default). 
+See  \link[stats]{kmeans} for more details in the implementation.
+
+\strong{hierarchical}
+
+While using the hierarchical algorithm (check \link[stats]{hclust} for further information) 
+\code{clusterGrid} allows the user either to especify the number of clusters ('centers') or not. 
+If the argument 'centers' is not provided, they are automatically set and the tree is cut when the height 
+difference between two consecutive divisions (sorted in ascending order) is larger than the intercuartile 
+range of the heights vector (see \link[stats]{cutree}) . 
+
+\strong{som}
+
+While using the SOM (self-organizing maps) algorithm (check \link[kohonen]{som} for further information), the argument 'centers' is provided as
+a two-element vector, indicating the dimensions \code{xdim,ydim} of the grid (see \link[kohonen]{somgrid}).
+Otherwise, by default 48 clusters (8x6) with rectangular topology are obtained.
 }
 \examples{
-#Example of the implementation of K-means clustering and their representation: 
+#Example of K-means clustering: 
 grid<-loadGridData(dataset , var = "grid")
 clusters<- clusterGrid(grid, type="kmeans", centers=10, iter.max=1000)
 cluster.grids <- lapply(1:10, function(i) {
   subsetDimension(clusters, dimension="time", indices=i)})
 mg <- do.call("makeMultiGrid", c(cluster.grids, skip.temporal.check = TRUE))
 spatialPlot(mg, backdrop.theme = "coastline", rev.colors = T, layout = c(2,5))
+#Example of hierarchical clustering: 
+...
+#Example of som clustering: 
+...
 }
 \seealso{
-Clustering Algorithm Help: \link[stats]{kmeans}, \link[stats]{hclust}, \link[kohonen]{som}.
+\link[stats]{kmeans}, \link[stats]{hclust}, \link[kohonen]{som}.
 }
 \author{
 J. A. Fernandez
