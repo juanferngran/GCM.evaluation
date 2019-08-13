@@ -17,18 +17,7 @@
 
 #'@title Cluster analysis of grids
 #'@description Performs cluster analysis of grids, multigrids or multimember multigrids. Several clustering algorithms are available.  
-#'@param grid A grid (gridded or station dataset), multigrid, multimember grid or multimember multigrid object, as 
-#' returned e.g. by \code{loadeR::loadGridData} (or \code{loadeR::loadStationData}), a
-#' multigrid, as returned by \code{makeMultiGrid}, or other types of multimember grids
-#' (possibly multimember grids) as returned e.g. by \code{loadeR.ECOMS::loadECOMS}.
-#'@param type Clustering algorithm to be used for the cluster analysis. 
-#'Possible values are "\strong{kmeans}" (default), "\strong{hierarchical}", "\strong{som}". 
-#'The core functions are \link[stats]{kmeans}, \link[stats]{hclust}, \link[kohonen]{som}, respectively. See Details.
-#'@param centers Integer value indicating the number of clusters, \strong{k}, or center points. See Details.
-#'@param iter.max (for the K-means algorithm) Integer value indicating the maximum number of iterations allowed. Default: 10.
-#'@param nstart (for the K-means algorithm) If centers is a number, how many random sets should be chosen? Default: 1.
-#'@param method (for the hierarchical algorithm) Agglomeration method to be used, one of "complete" (default), "ward.D", "ward.D2", "single",
-#'"average", "mcquitty", "median" or "centroid". 
+#'@inheritParams clusterGrid_3D 
 #'@seealso \link[stats]{kmeans}, \link[stats]{hclust}, \link[kohonen]{som}.
 #'@return A new grid object that contains the clusters created using the specified algorithm.
 #'The clustering type, number of clusters and other algorithm-specific parameters are provided as attributes.
@@ -71,7 +60,49 @@
 #'clusters<- clusterGrid(grid, type="som", centers = c(10,1))
 
 
+
 clusterGrid <- function(grid, type="kmeans", centers=NULL, iter.max=10, nstart=1, method = "complete"){
+  var.names <- getVarNames(grid)
+  n.var<-length(var.names)
+  Xsc.list<- lapply(1:length(var.names), function(x) {
+    l <- suppressWarnings(subsetGrid(grid, var = var.names[x])) %>% redim(member = TRUE)
+    # l <- subsetGrid(SLP.complex.var, var = var.names[x])
+    # m <- redim(l, member = TRUE)
+    n.mem <- getShape(l, "member")
+    d <-lapply(1:n.mem, function(m) {
+      # calculate clusters of 3D data
+      sub.grid <- subsetGrid(l, members = m, drop = TRUE)
+      clusters <- suppressWarnings(clusterGrid_3D(sub.grid, type, centers, iter.max, nstart, method))
+      #return(clusters)
+    }) 
+    l.list <- suppressMessages(bindGrid(d, dimension = "member"))
+  }) 
+  out<-makeMultiGrid(Xsc.list)
+  #out$Variable$varName<-seq(1,n.var)
+  #out$Variable$level<-"NULL"
+  return(out)
+}
+
+#'@title Cluster analysis of 3D grids
+#'@description Performs cluster analysis of 3D grids. Several clustering algorithms are available.
+#'@param grid A grid (gridded or station dataset), multigrid, multimember grid or multimember multigrid object, as 
+#' returned e.g. by \code{loadeR::loadGridData} (or \code{loadeR::loadStationData}), a
+#' multigrid, as returned by \code{makeMultiGrid}, or other types of multimember grids
+#' (possibly multimember grids) as returned e.g. by \code{loadeR.ECOMS::loadECOMS}.
+#'@param type Clustering algorithm to be used for the cluster analysis. 
+#'Possible values are "\strong{kmeans}" (default), "\strong{hierarchical}", "\strong{som}". 
+#'The core functions are \link[stats]{kmeans}, \link[stats]{hclust}, \link[kohonen]{som}, respectively. See Details.
+#'@param centers Integer value indicating the number of clusters, \strong{k}, or center points. See Details.
+#'@param iter.max (for the K-means algorithm) Integer value indicating the maximum number of iterations allowed. Default: 10.
+#'@param nstart (for the K-means algorithm) If centers is a number, how many random sets should be chosen? Default: 1.
+#'@param method (for the hierarchical algorithm) Agglomeration method to be used, one of "complete" (default), "ward.D", "ward.D2", "single",
+#'"average", "mcquitty", "median" or "centroid".  
+#' @keywords internal
+#'@return A new 3D grid object that contains the clusters created using the specified algorithm.
+#'The clustering type, number of clusters and other algorithm-specific parameters are provided as attributes.
+
+
+clusterGrid_3D <- function(grid, type, centers, iter.max, nstart, method){
   
   type=tolower(type)
   grid.2D <- array3Dto2Dmat(grid$Data) #From 3D to 2D
@@ -121,7 +152,7 @@ clusterGrid <- function(grid, type="kmeans", centers=NULL, iter.max=10, nstart=1
   aux <- grid
   aux$Data <- Y
   attr(aux, "cluster.type")<- type
-  aux$Variable$varName<-"clusters"
+ # aux$Variable$varName<-"clusters"
   
   #Add heights for hierarchical as attribute
   if(is.null(type) | type == "kmeans"){
@@ -140,7 +171,6 @@ clusterGrid <- function(grid, type="kmeans", centers=NULL, iter.max=10, nstart=1
       attr(aux, "centers")<- centers[1]*centers[2]
     }
   }
-
   return(aux)
-
 }
+
