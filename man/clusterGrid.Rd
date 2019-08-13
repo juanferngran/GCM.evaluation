@@ -27,7 +27,7 @@ The core functions are \link[stats]{kmeans}, \link[stats]{hclust}, \link[kohonen
 "average", "mcquitty", "median" or "centroid".}
 }
 \value{
-A new grid object that contains the clusters created using the specified algorithm.
+A new C4R grid object that contains the clusters created using the specified algorithm. Clusters are included in the dimension 'time'.
 The clustering type, number of clusters and other algorithm-specific parameters are provided as attributes.
 }
 \description{
@@ -55,18 +55,18 @@ Otherwise, by default 48 clusters (8x6) with rectangular topology are obtained.
 }
 \examples{
 #Example of K-means clustering: 
-grid<-loadGridData(dataset , var = "grid")
-clusters<- clusterGrid(grid, type="kmeans", centers=10, iter.max=1000)
-cluster.grids <- lapply(1:attr(clusters, "centers"), function(i) {
- subsetDimension(clusters, dimension="time", indices=i)})
-mg <- do.call("makeMultiGrid", c(cluster.grids, skip.temporal.check = TRUE))
-spatialPlot(mg, backdrop.theme = "coastline", rev.colors = T, layout = c(2,ceiling(attr(clusters, "centers")/2)))
+data(NCEP_Iberia_psl, package = "transformeR")
+clusters<- clusterGrid(NCEP_Iberia_psl, type="kmeans", centers=10, iter.max=1000)
 
 #Example of hierarchical clustering: 
-clusters<- clusterGrid(grid, type="hierarchical")
+clusters<- clusterGrid(NCEP_Iberia_psl, type="hierarchical")
 
 #Example of som clustering: 
-clusters<- clusterGrid(grid, type="som", centers = c(10,1))
+clusters<- clusterGrid(NCEP_Iberia_psl, type="som", centers = c(10,1))
+
+#Example of K-means clustering of several variables:
+data(NCEP_Iberia_ta850, package = "transformeR")
+clusters<- clusterGrid(makeMultiGrid(NCEP_Iberia_psl, NCEP_Iberia_ta850), type="kmeans", centers=10, iter.max=1000)
 }
 \seealso{
 \link[stats]{kmeans}, \link[stats]{hclust}, \link[kohonen]{som}.
