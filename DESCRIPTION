@@ -2,13 +2,14 @@ Package: clusteR
 Depends:
     R(>= 3.1.0),
     transformeR(>= 1.4.6),
-    kohonen
+    kohonen,
+    magrittr
 Imports:    
 Suggests:
 Type: Package
 Title: Visualizing climate4R data and Communicating Uncertainty in Seasonal Climate Prediction
-Version: 1.0
-Date: 2019-08-02
+Version: 2.0
+Date: 2019-08-13
 Author: as.person(c(
     "Santander Meteorology Group <http://meteo.unican.es> [cph]",
     "María Dolores Frías <friasmd@unican.es> [aut, cre]",

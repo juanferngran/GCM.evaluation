@@ -19,7 +19,7 @@
 #'@description Performs cluster analysis of grids, multigrids or multimember multigrids. Several clustering algorithms are available.  
 #'@inheritParams clusterGrid_3D 
 #'@seealso \link[stats]{kmeans}, \link[stats]{hclust}, \link[kohonen]{som}.
-#'@return A new grid object that contains the clusters created using the specified algorithm.
+#'@return A new C4R grid object that contains the clusters created using the specified algorithm. Clusters are included in the dimension 'time'.
 #'The clustering type, number of clusters and other algorithm-specific parameters are provided as attributes.
 #'@details 
 #'\strong{kmeans}
@@ -45,41 +45,40 @@
 #'@importFrom transformeR array3Dto2Dmat mat2Dto3Darray
 #'@importFrom stats kmeans hclust cutree
 #'@importFrom kohonen som
-#'@examples #Example of K-means clustering: 
-#'grid<-loadGridData(dataset , var = "grid")
-#'clusters<- clusterGrid(grid, type="kmeans", centers=10, iter.max=1000)
-#'cluster.grids <- lapply(1:attr(clusters, "centers"), function(i) {
-#'  subsetDimension(clusters, dimension="time", indices=i)})
-#'mg <- do.call("makeMultiGrid", c(cluster.grids, skip.temporal.check = TRUE))
-#'spatialPlot(mg, backdrop.theme = "coastline", rev.colors = T, layout = c(2,ceiling(attr(clusters, "centers")/2)))
+#'@importFrom magrittr %>% 
+#'@examples 
+#'#Example of K-means clustering: 
+#' data(NCEP_Iberia_psl, package = "transformeR")
+#' clusters<- clusterGrid(NCEP_Iberia_psl, type="kmeans", centers=10, iter.max=1000)
 #'
 #'#Example of hierarchical clustering: 
-#'clusters<- clusterGrid(grid, type="hierarchical")
+#'clusters<- clusterGrid(NCEP_Iberia_psl, type="hierarchical")
 #'
 #'#Example of som clustering: 
-#'clusters<- clusterGrid(grid, type="som", centers = c(10,1))
+#'clusters<- clusterGrid(NCEP_Iberia_psl, type="som", centers = c(10,1))
+#'
+#'#Example of K-means clustering of several variables:
+#' data(NCEP_Iberia_ta850, package = "transformeR")
+#' clusters<- clusterGrid(makeMultiGrid(NCEP_Iberia_psl, NCEP_Iberia_ta850), type="kmeans", centers=10, iter.max=1000)
 
 
 
 clusterGrid <- function(grid, type="kmeans", centers=NULL, iter.max=10, nstart=1, method = "complete"){
   var.names <- getVarNames(grid)
   n.var<-length(var.names)
-  Xsc.list<- lapply(1:length(var.names), function(x) {
-    l <- suppressWarnings(subsetGrid(grid, var = var.names[x])) %>% redim(member = TRUE)
-    # l <- subsetGrid(SLP.complex.var, var = var.names[x])
-    # m <- redim(l, member = TRUE)
+
+    Xsc.list<- lapply(1:length(var.names), function(x) {
+    l <- suppressWarnings(subsetGrid(grid, var = var.names[x]) %>% redim(member = TRUE))
     n.mem <- getShape(l, "member")
     d <-lapply(1:n.mem, function(m) {
       # calculate clusters of 3D data
       sub.grid <- subsetGrid(l, members = m, drop = TRUE)
       clusters <- suppressWarnings(clusterGrid_3D(sub.grid, type, centers, iter.max, nstart, method))
-      #return(clusters)
-    }) 
-    l.list <- suppressMessages(bindGrid(d, dimension = "member"))
+     }) 
+    l.list <- suppressWarnings(bindGrid(d, dimension = "member"))
   }) 
-  out<-makeMultiGrid(Xsc.list)
-  #out$Variable$varName<-seq(1,n.var)
-  #out$Variable$level<-"NULL"
+  out <- suppressWarnings(makeMultiGrid(Xsc.list))
+
   return(out)
 }
 
@@ -97,7 +96,7 @@ clusterGrid <- function(grid, type="kmeans", centers=NULL, iter.max=10, nstart=1
 #'@param nstart (for the K-means algorithm) If centers is a number, how many random sets should be chosen? Default: 1.
 #'@param method (for the hierarchical algorithm) Agglomeration method to be used, one of "complete" (default), "ward.D", "ward.D2", "single",
 #'"average", "mcquitty", "median" or "centroid".  
-#' @keywords internal
+#'@keywords internal
 #'@return A new 3D grid object that contains the clusters created using the specified algorithm.
 #'The clustering type, number of clusters and other algorithm-specific parameters are provided as attributes.
 
@@ -154,7 +153,7 @@ clusterGrid_3D <- function(grid, type, centers, iter.max, nstart, method){
   attr(aux, "cluster.type")<- type
  # aux$Variable$varName<-"clusters"
   
-  #Add heights for hierarchical as attribute
+  #Add attributes depending on the cluster algorithm
   if(is.null(type) | type == "kmeans"){
     attr(aux, "centers")<- centers
     attr(aux, "withinss")<- kmModel$withinss

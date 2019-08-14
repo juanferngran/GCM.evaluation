@@ -2,39 +2,41 @@
 % Please edit documentation in R/cluster2plot.R
 \name{cluster2plot}
 \alias{cluster2plot}
-\title{From Grid of Clusters to Plot}
+\title{Convert a grid of clusters into a C4R grid for plotting}
 \usage{
 cluster2plot(cluster, members = 1, var = getVarNames(cluster)[1])
 }
 \arguments{
 \item{cluster}{A grid (gridded or station dataset), multigrid, multimember grid or multimember multigrid object, as 
-returned e.g. by \code{clusterGrid} that contains clusters from a weather type in the time dimension.}
+returned by \code{clusterGrid}, with clusters in the 'time' dimension.}
 
-\item{members}{Integer value indicating \strong{the position} of the member to be subset. members=1 by default.
+\item{members}{(optional) Integer value indicating \strong{the position} of the member to be subset. Default: 1.
 If input grid has no member dimension, this argument is ignored.}
 
-\item{var}{Character vector indicating the variables(s) to be extracted. (Used for multigrid subsetting). 
-See \link[transformeR]{subsetGrid}. It takes the first variable by default.}
+\item{var}{(optional) Character vector indicating the variable name to be extracted. Default: first variable.
+See \link[transformeR]{subsetGrid}.}
 }
 \value{
-A new grid object that contains the clusters from the specified variable and/or member. 
-This subset grid of clusters is ready to be plotted with Climate4R plotting tools, e.g. \code{spatialPlot}.
+A new C4R grid object that contains the clusters from the specified variable and/or member. 
+This subset grid of clusters is ready to be plotted with C4R plotting tools, e.g. \code{spatialPlot}, since clusters are intrepreted as variables (see \link[transformeR]{makeMultiGrid}).
 }
 \description{
-Performs subsetting in variable and member dimensions on a grid of clusters and prepares it to be plotted.
+This function allows to prepare a grid of clusters (included in 'time' dimension) for plotting. A subset of a variable and/or member is also performed in multimember or multigrid objects.
 }
 \details{
 
 }
 \examples{
 #Example 1: 'cluster' is a 3D grid of clusters.
-cluster<- clusterGrid(SLP, type="kmeans", centers=10, iter.max=1000)
-mg <- cluster2plot(cluster)
+data(NCEP_Iberia_psl, package = "transformeR")
+clusters<- clusterGrid(NCEP_Iberia_psl, type="kmeans", centers=10)
+mg <- cluster2plot(clusters)
 spatialPlot(mg, backdrop.theme = "coastline", rev.colors = T, layout = c(2,ceiling(attr(clusters, "centers")/2)), as.table=TRUE)
 
-Example 2: 'cluster' is a grid of clusters with variables and/or members. 
-clusters<- clusterGrid(SLP.complex.var, type="kmeans", centers=10, iter.max=1000)
-mg <- cluster2plot(clusters, members=1, var="slp") #To obtain first member and variable called "slp"
+Example 2: 'cluster' is a grid of clusters with two variables (same for members). 
+data(NCEP_Iberia_ta850, package = "transformeR")
+clusters<- clusterGrid(makeMultiGrid(NCEP_Iberia_psl, NCEP_Iberia_ta850), type="kmeans", centers=10, iter.max=1000)
+mg <- cluster2plot(clusters, members=1, var="psl") #To obtain first member and variable called "psl"
 spatialPlot(mg, backdrop.theme = "coastline", rev.colors = T, layout = c(2,ceiling(attr(clusters, "centers")/2)), as.table=TRUE)
 }
 \seealso{
