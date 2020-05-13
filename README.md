@@ -1,4 +1,4 @@
-# Date: 6/8/2019
+# Date: 13/5/2020
 # Author: Juan A. Fernandez
 
-ClusteR library
+Trabajo de Fin de Máster en Ingeniería de Telecomunicaciones
