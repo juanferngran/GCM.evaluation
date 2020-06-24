@@ -7,6 +7,7 @@
 #'  Default to \code{FALSE}. See Details.
 #' @return A numeric value for the calculated TPMS (0 is perfect)
 #' @importFrom magrittr %>% 
+#' @export
 #' @author juaco
 #' @details The TPMS It is intended to serve as a summary measure that allows to rank different GCMs according
 #'  to their transition probability matrix "fingerprint".
@@ -29,8 +30,8 @@
 #' TPMS(wts.EC.earth, clusters.era.interim, include.nonexisting = TRUE)
 #' }
 
-source("R/transitionProb.R")
-source("R/transitionProb.pvalue.R")
+# source("R/transitionProb.R")
+# source("R/transitionProb.pvalue.R")
 
 TPMS <- function(obs.wt.grid,
                  gcm.wt.grid,
