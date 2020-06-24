@@ -10,9 +10,10 @@ library(magrittr)
 #Comparación Reanalisis: 
 
 # dataInventory("http://meteo.unican.es/tds5/dodsC/interim/daily/interim20_daily.ncml")
-# wmo <- 1981:2010
-# lonLim = c(-45, 66)
-# latLim = c(22,73)
+
+wmo <- 1981:2010
+lonLim = c(-45, 66)
+latLim = c(22,73)
 # jra <- loadGridData(dataset = "http://meteo.unican.es/tds5/dodsC/jra55/daily/JRA55_daily_Dataset.ncml",
 #                     var = "slp",
 #                     lonLim = lonLim,
@@ -70,62 +71,62 @@ dev.new()
 layout(matrix(c(rep(1, 6), rep(2, 6), rep(3, 6), rep(4, 6), 5), ncol=1)) 
 par(mai = rep(0.52, 4))
 
-a1 <- freqWT(clusters.jra, season = DJF) 
+a1 <- freqWT(clusters.era.interim, season = DJF) 
 wt.order.a <- sort.int(a1, decreasing = TRUE, index.return = TRUE)$ix
-a2 <- freqWT(clusters.era.interim, season = DJF)[wt.order.a] 
-a3 <- freqWT(clusters.era20, season = DJF)[wt.order.a] 
-a4 <- freqWT(clusters.ncep, season = DJF)[wt.order.a]
+a2 <- freqWT(clusters.jra, season = DJF)[wt.order.a] 
+a3 <- freqWT(clusters.ncep, season = DJF)[wt.order.a] 
+a4 <- freqWT(clusters.era20, season = DJF)[wt.order.a]
 wt.freqs <- matrix(c(a1[wt.order.a],a2,a3,a4), nrow = 4, ncol = 26, byrow = TRUE, 
-                   dimnames = list(c("JRA", "ERA-Interim","ERA20", "NCEP"), names(a2)))
+                   dimnames = list(c("ERA-Interim", "JRA", "NCEP","ERA20"), names(a2)))
 
 p1 <- barplot(wt.freqs, 
               beside = TRUE,  
               col = c("#612C69", "#459ED5", "#FCCF61" , rgb(0.3,0.9,0.4,0.6)), border = "grey",
               ylab = "freq. [%]", ylim = c(0,20),
-              main = "Freq. of LWTs (DJF)")
+              main = "DJF")
 
-b1 <- freqWT(clusters.jra, season = MAM)
+b1 <- freqWT(clusters.era.interim, season = MAM)
 wt.order.b <- sort.int(b1, decreasing = TRUE, index.return = TRUE)$ix
-b2 <- freqWT(clusters.era.interim, season = MAM)[wt.order.b] 
-b3 <- freqWT(clusters.era20, season = MAM)[wt.order.b]  
-b4 <- freqWT(clusters.ncep, season = MAM)[wt.order.b] 
+b2 <- freqWT(clusters.jra, season = MAM)[wt.order.b] 
+b3 <- freqWT(clusters.ncep, season = MAM)[wt.order.b]  
+b4 <- freqWT(clusters.era20, season = MAM)[wt.order.b] 
 wt.freqs <- matrix(c(b1[wt.order.b],b2,b3,b4), nrow = 4, ncol = 26, byrow = TRUE, 
-                   dimnames = list(c("JRA", "ERA-Interim","ERA20", "NCEP"), names(b2)))
+                   dimnames = list(c("ERA-Interim", "JRA", "NCEP","ERA20"), names(b2)))
 p2 <- barplot(wt.freqs, 
               beside = TRUE,  
               col = c("#612C69", "#459ED5", "#FCCF61" , rgb(0.3,0.9,0.4,0.6)), border = "grey",
               ylab = "freq. [%]", ylim = c(0,20),
-              main = "Freq. of LWTs (MAM)")
+              main = "MAM")
 
-c1 <- freqWT(clusters.jra, season = JJA) 
+c1 <- freqWT(clusters.era.interim, season = JJA) 
 wt.order.c <- sort.int(c1, decreasing = TRUE, index.return = TRUE)$ix
-c2 <- freqWT(clusters.era.interim, season = JJA)[wt.order.c] 
+c2 <- freqWT(clusters.jra, season = JJA)[wt.order.c] 
 c3 <- freqWT(clusters.era20, season = JJA)[wt.order.c] 
 c4 <- freqWT(clusters.ncep, season = JJA)[wt.order.c] 
 wt.freqs <- matrix(c(c1[wt.order.c],c2,c3,c4), nrow = 4, ncol = 26, byrow = TRUE, 
-                   dimnames = list(c("JRA", "ERA-Interim","ERA20", "NCEP"), names(c2)))
+                   dimnames = list(c("ERA-Interim", "JRA", "NCEP","ERA20"), names(c2)))
 p3 <- barplot(wt.freqs, 
               beside = TRUE,  
               col = c("#612C69", "#459ED5", "#FCCF61" , rgb(0.3,0.9,0.4,0.6)), border = "grey",
               ylab = "freq. [%]", ylim = c(0,20),
-              main = "Freq. of LWTs (JJA)")
+              main = "JJA")
 
-d1 <- freqWT(clusters.jra, season = SON)
+d1 <- freqWT(clusters.era.interim, season = SON)
 wt.order.d <- sort.int(d1, decreasing = TRUE, index.return = TRUE)$ix
-d2 <- freqWT(clusters.era.interim, season = SON)[wt.order.d] 
-d3 <- freqWT(clusters.era20, season = SON)[wt.order.d] 
-d4 <- freqWT(clusters.ncep, season = SON)[wt.order.d] 
+d2 <- freqWT(clusters.jra, season = SON)[wt.order.d] 
+d3 <- freqWT(clusters.ncep, season = SON)[wt.order.d] 
+d4 <- freqWT(clusters.era20, season = SON)[wt.order.d] 
 wt.freqs <- matrix(c(d1[wt.order.d],d2,d3,d4), nrow = 4, ncol = 26, byrow = TRUE, 
-                   dimnames = list(c("JRA", "ERA-Interim","ERA20", "NCEP"), names(d2)))
+                   dimnames = list(c("ERA-Interim", "JRA", "NCEP","ERA20"), names(d2)))
 p4 <- barplot(wt.freqs, 
               beside = TRUE,  
               col = c("#612C69", "#459ED5", "#FCCF61" , rgb(0.3,0.9,0.4,0.6)), border = "grey",
               ylab = "freq. [%]", ylim = c(0,20),
-              main = "Freq. of LWTs (SON)")
+              main = "SON")
 
 par(mai=c(0,0,0,0))
 plot.new()
-legend(legend = c("JRA", "ERA-Interim","ERA20", "NCEP") , 
+legend(legend = c("ERA-Interim", "JRA", "NCEP","ERA20") , 
        fill = c("#612C69", "#459ED5", "#FCCF61" , rgb(0.3,0.9,0.4,0.6)), 
        "center", horiz=TRUE, border = "transparent", bty = "n")
 
@@ -166,10 +167,8 @@ visualizeR::spatialPlot(cts.mg2, sp.layout = list(l1), backdrop.theme = "coastli
 #                   rcp8.5 = "http://meteo.unican.es/tds5/dodsC/cmip5/CNRM-CERFACS/CNRM-CM5/rcp85/day/cnrm-cerfacs_cnrm-cm5_rcp85_r1i1p1.ncml", season = c(12,1:11))
 # EC.earth <- loadCMIP5(historical = "http://meteo.unican.es/tds5/dodsC/cmip5/EC-EARTH/EC-EARTH/historical/day/ec-earth_ec-earth_historical_r12i1p1.ncml",
 #                       rcp8.5 = "http://meteo.unican.es/tds5/dodsC/cmip5/EC-EARTH/EC-EARTH/rcp85/day/ec-earth_ec-earth_rcp85_r12i1p1.ncml", season = c(12,1:11))
-# ipsl <- loadCMIP5(historical = "http://meteo.unican.es/tds5/dodsC/cmip5/IPSL/IPSL-CM5A-MR/historical/day/ipsl_ipsl-cm5a-mr_historical_r1i1p1.ncml",
-#                   rcp8.5 = "http://meteo.unican.es/tds5/dodsC/cmip5/IPSL/IPSL-CM5A-MR/rcp85/day/ipsl_ipsl-cm5a-mr_rcp85_r1i1p1.ncml", season = c(12,1:11))
-# miroc <- loadCMIP5(historical = "http://meteo.unican.es/tds5/dodsC/cmip5/MIROC/MIROC-ESM/historical/day/miroc_miroc-esm_historical_r1i1p1.ncml",
-#                    rcp8.5 = "http://meteo.unican.es/tds5/dodsC/cmip5/MIROC/MIROC-ESM/rcp85/day/miroc_miroc-esm_rcp85_r1i1p1.ncml", season = c(12,1:11))
+  ipsl <- loadCMIP5(historical = "/home/juan/Documents/2020_CMIP/Data/nc/psl_day_IPSL-CM5A-LR_historical_r1i1p1_19500101-20051231.nc",
+                   rcp8.5 = "/home/juan/Documents/2020_CMIP/Data/nc/psl_day_IPSL-CM5A-LR_rcp85_r1i1p1_20060101-22051231.nc", season = c(12,1:11))
 # mohc <- loadCMIP5(historical = "http://meteo.unican.es/tds5/dodsC/cmip5/MOHC/HADGEM2-ES/historical/day/mohc_hadgem2-es_historical_r1i1p1.ncml",
 #                   rcp8.5 = "http://meteo.unican.es/tds5/dodsC/cmip5/MOHC/HADGEM2-ES/rcp85/day/mohc_hadgem2-es_rcp85_r1i1p1.ncml", season = c(12,1:11))
 # mpi.esm.lr <- loadCMIP5(historical = "http://meteo.unican.es/tds5/dodsC/cmip5/MPI-M/MPI-ESM-LR/historical/day/mpi-m_mpi-esm-lr_historical_r1i1p1.ncml",
@@ -181,7 +180,33 @@ visualizeR::spatialPlot(cts.mg2, sp.layout = list(l1), backdrop.theme = "coastli
 # noaa.gfdl <- loadCMIP5(historical = "http://meteo.unican.es/tds5/dodsC/cmip5/NOAA-GFDL/GFDL-ESM2M/historical/day/noaa-gfdl_gfdl-esm2m_historical_r1i1p1.ncml",
 #                        rcp8.5 = "http://meteo.unican.es/tds5/dodsC/cmip5/NOAA-GFDL/GFDL-ESM2M/rcp85/day/noaa-gfdl_gfdl-esm2m_rcp85_r1i1p1.ncml", season = c(12,1:11))
 # 
-# save(cccma, cnrm, EC.earth, ipsl, miroc, mohc, mpi.esm.lr, mpi.esm.mr, ncc.nor, noaa.gfdl, file = "cmip5_europe.RData")
+  miroc <- loadGridData(dataset = "/home/juan/Documents/2020_CMIP/Data/CMIP5_MIROC_MIROC5_historical_r1i1p1.ncml",
+              var = "psl",
+              lonLim = lonLim,
+              latLim = latLim,
+              years = 1981:2010,
+              season = c(12,1:11),
+              time = "DD",
+              aggr.d = "mean")
+#
+  grid1 <- loadGridData(dataset = "http://meteo.unican.es/tds5/dodsC/cmip5/MOHC/HADGEM2-ES/historical/day/mohc_hadgem2-es_historical_r1i1p1.ncml",
+                        var = var,
+                        lonLim = lonLim,
+                        latLim = latLim,
+                        years = 1980:2005,
+                        time = "DD", 
+                        aggr.d = "mean")
+  
+  grid2 <- loadGridData(dataset = "http://meteo.unican.es/tds5/dodsC/cmip5/MOHC/HADGEM2-ES/rcp85/day/mohc_hadgem2-es_rcp85_r1i1p1.ncml",
+                        var = var,
+                        lonLim = lonLim,
+                        latLim = latLim,
+                        years = 2005:2010,
+                        time = "DD", 
+                        aggr.d = "mean")
+  hadgem <- bindGrid(grid1, grid2, dimension = "time")
+  hadgem <- subsetGrid(hadgem, season = c(12,1:11))
+ save(cccma, cnrm, EC.earth, ipsl, miroc, hadgem, mpi.esm.lr, ncc.nor, noaa.gfdl, file = "cmip5_europe.RData")
 # 
 # ### Fix grid to 10957 days. A different grid is needed to be loaded:
 # grid <- cnrm
@@ -192,19 +217,20 @@ visualizeR::spatialPlot(cts.mg2, sp.layout = list(l1), backdrop.theme = "coastli
 # }
 # 
 # ### Lamb WTs from GCMs CMIP5: 
-# wts.cccma <- clusterGrid(cccma, type = "lamb")
-# wts.cnrm <- clusterGrid(cnrm, type = "lamb")
-# wts.EC.earth <- clusterGrid(EC.earth, type = "lamb")
-# wts.ipsl <- clusterGrid(ipsl, type = "lamb")
-# wts.miroc <- clusterGrid(miroc, type = "lamb")
-# wts.mohc <- clusterGrid(mohc, type = "lamb")
-# wts.mpi.esm.lr <- clusterGrid(mpi.esm.lr, type = "lamb")
-# wts.mpi.esm.mr <- clusterGrid(mpi.esm.mr, type = "lamb")
-# wts.ncc.nor <- clusterGrid(ncc.nor, type = "lamb")
-# wts.noaa.gfdl <- clusterGrid(noaa.gfdl, type = "lamb")
-#save(wts.cccma, wts.cnrm, wts.EC.earth, wts.ipsl, wts.miroc, wts.mohc, wts.mpi.esm.lr, wts.mpi.esm.mr, wts.ncc.nor, wts.noaa.gfdl, file = "WTs_cmip5_europe.RData")
+wts.cccma <- clusterGrid(cccma, type = "lamb")
+wts.cnrm <- clusterGrid(cnrm, type = "lamb")
+wts.EC.earth <- clusterGrid(EC.earth, type = "lamb")
+wts.ipsl <- clusterGrid(ipsl, type = "lamb")
+wts.miroc <- clusterGrid(miroc, type = "lamb")
+wts.mohc <- clusterGrid(hadgem, type = "lamb")
+wts.mpi.esm.lr <- clusterGrid(mpi.esm.lr, type = "lamb")
+wts.ncc.nor <- clusterGrid(ncc.nor, type = "lamb")
+wts.noaa.gfdl <- clusterGrid(noaa.gfdl, type = "lamb")
+
+save(wts.cccma, wts.cnrm, wts.EC.earth, wts.ipsl, wts.miroc, wts.mohc, wts.mpi.esm.lr, wts.ncc.nor, wts.noaa.gfdl, file = "WTs_cmip5_europe.RData")
 
 load("/oceano/gmeteo/WORK/fdezja/2020_CMIP/Data/WTs_cmip5.RData", verbose = TRUE)
+load("/oceano/gmeteo/WORK/fdezja/2020_CMIP/Data/cmip5_europe.RData", verbose = TRUE)
 
 ##### Figure 3: Levelplot with RMSE between all the models (CMIP5, CMIP6, reanalysis products) and ERA-Interim
 
@@ -216,50 +242,70 @@ load("/oceano/gmeteo/WORK/fdezja/2020_CMIP/Data/WTs_cmip5.RData", verbose = TRUE
 # getSeason(a)
 # getSeason(wts.cccma)
 
-a <- freqWT(clusters.era.interim, season = DJF) 
-b <- freqWT(clusters.era.interim, season = MAM)
-c <- freqWT(clusters.era.interim, season = JJA) 
-d <- freqWT(clusters.era.interim, season = SON)
+# # #ERA-Interim Seasonal LWTs
+# a <- freqWT(clusters.era.interim, season = DJF)
+# b <- freqWT(clusters.era.interim, season = MAM)
+# c <- freqWT(clusters.era.interim, season = JJA)
+# d <- freqWT(clusters.era.interim, season = SON)
+# 
+#JRA Seasonal LWTs
+a <- freqWT(clusters.jra, season = DJF)
+b <- freqWT(clusters.jra, season = MAM)
+c <- freqWT(clusters.jra, season = JJA)
+d <- freqWT(clusters.jra, season = SON)
+
+# #NCEP Seasonal LWTs
+# a <- freqWT(clusters.ncep, season = DJF)
+# b <- freqWT(clusters.ncep, season = MAM)
+# c <- freqWT(clusters.ncep, season = JJA)
+# d <- freqWT(clusters.ncep, season = SON)
+# 
+# #ERA-20C Seasonal LWTs
+# a <- freqWT(clusters.era20, season = DJF)
+# b <- freqWT(clusters.era20, season = MAM)
+# c <- freqWT(clusters.era20, season = JJA)
+# d <- freqWT(clusters.era20, season = SON)
       
 ### Frequencies Differences in LWTs
 
-CMIP5.names <- c("CanESM2", "CNRM-CM5", "EC-EARTH", "GFDL-ESM2M", "HadGEM2-ES", "IPSL-CM5A-MR", "MIROC5",
-                 "MPI-ESM-LR", "MPI-ESM-MR", "NorESM1-M")
+CMIP5.names <- c("CanESM2", "CNRM-CM5", "EC-EARTH", "GFDL-ESM2M", "HadGEM2-ES", "IPSL-CM5-LR", "MIROC5",
+                 "MPI-ESM-LR", "NorESM1-M")
+reanalysis <- c("ERA-Interim", "ERA-20C", "NCEP")
 
-DJF.diff.freqs.cmip5 <- relativeFreqWT(clusters.jra, clusters.era20, clusters.ncep, wts.cccma, wts.cnrm, wts.EC.earth, wts.noaa.gfdl,
-                                       wts.mohc, wts.ipsl, wts.miroc, wts.mpi.esm.lr, wts.mpi.esm.mr, wts.ncc.nor, 
+DJF.diff.freqs.cmip5 <- relativeFreqWT(clusters.era.interim, clusters.era20, clusters.ncep, wts.cccma, wts.cnrm, wts.EC.earth, wts.noaa.gfdl,
+                                       wts.mohc, wts.ipsl, wts.miroc, wts.mpi.esm.lr, wts.ncc.nor, 
                                        ref = a,  cluster = WTs.index, season = DJF)
 
 rownames(DJF.diff.freqs.cmip5) <- subsetWT
-colnames(DJF.diff.freqs.cmip5) <- c("JRA", "ERA-20C", "NCEP", CMIP5.names)
+colnames(DJF.diff.freqs.cmip5) <- c(reanalysis, CMIP5.names)
 
-MAM.diff.freqs.cmip5 <- relativeFreqWT(clusters.jra, clusters.era20, clusters.ncep, wts.cccma, wts.cnrm, wts.EC.earth, wts.noaa.gfdl,
-                                       wts.mohc, wts.ipsl, wts.miroc, wts.mpi.esm.lr, wts.mpi.esm.mr, wts.ncc.nor,
+MAM.diff.freqs.cmip5 <- relativeFreqWT(clusters.era.interim, clusters.era20, clusters.ncep, wts.cccma, wts.cnrm, wts.EC.earth, wts.noaa.gfdl,
+                                       wts.mohc, wts.ipsl, wts.miroc, wts.mpi.esm.lr, wts.ncc.nor,
                                        ref = b, cluster = WTs.index, season = MAM)
 
 rownames(MAM.diff.freqs.cmip5) <- subsetWT
-colnames(MAM.diff.freqs.cmip5) <- c("JRA", "ERA-20C", "NCEP", CMIP5.names)
+colnames(DJF.diff.freqs.cmip5) <- c(reanalysis, CMIP5.names)
 
-JJA.diff.freqs.cmip5 <- relativeFreqWT(clusters.jra, clusters.era20, clusters.ncep, wts.cccma, wts.cnrm, wts.EC.earth, wts.noaa.gfdl,
-                                       wts.mohc, wts.ipsl, wts.miroc, wts.mpi.esm.lr, wts.mpi.esm.mr, wts.ncc.nor,
+JJA.diff.freqs.cmip5 <- relativeFreqWT(clusters.era.interim, clusters.era20, clusters.ncep, wts.cccma, wts.cnrm, wts.EC.earth, wts.noaa.gfdl,
+                                       wts.mohc, wts.ipsl, wts.miroc, wts.mpi.esm.lr, wts.ncc.nor,
                                        ref = c, cluster = WTs.index, season = JJA)
 
 rownames(JJA.diff.freqs.cmip5) <- subsetWT
-colnames(JJA.diff.freqs.cmip5) <- c("JRA", "ERA-20C", "NCEP", CMIP5.names)
+colnames(DJF.diff.freqs.cmip5) <- c(reanalysis, CMIP5.names)
 
-SON.diff.freqs.cmip5 <- relativeFreqWT(clusters.jra, clusters.era20, clusters.ncep, wts.cccma, wts.cnrm, wts.EC.earth, wts.noaa.gfdl,
-                                       wts.mohc, wts.ipsl, wts.miroc, wts.mpi.esm.lr, wts.mpi.esm.mr, wts.ncc.nor,
+SON.diff.freqs.cmip5 <- relativeFreqWT(clusters.era.interim, clusters.era20,clusters.ncep, wts.cccma, wts.cnrm, wts.EC.earth, wts.noaa.gfdl,
+                                       wts.mohc, wts.ipsl, wts.miroc, wts.mpi.esm.lr, wts.ncc.nor,
                                        ref = d,cluster = WTs.index, season = SON)
 
 rownames(SON.diff.freqs.cmip5) <- subsetWT
-colnames(SON.diff.freqs.cmip5) <- c("JRA", "ERA-20C", "NCEP", CMIP5.names)
+colnames(DJF.diff.freqs.cmip5) <- c(reanalysis, CMIP5.names)
 
-yearly.diff.freqs.cmip5 <- relativeFreqWT(clusters.jra, clusters.era20, clusters.ncep, wts.cccma, wts.cnrm, wts.EC.earth, wts.noaa.gfdl,
-                                       wts.mohc, wts.ipsl, wts.miroc, wts.mpi.esm.lr, wts.mpi.esm.mr, wts.ncc.nor, 
-                                       ref = freqWT(clusters.era.interim),  cluster = WTs.index)
+yearly.diff.freqs.cmip5 <- relativeFreqWT(clusters.era.interim, clusters.era20,clusters.ncep, wts.cccma, wts.cnrm, wts.EC.earth, wts.noaa.gfdl,
+                                       wts.mohc, wts.ipsl, wts.miroc, wts.mpi.esm.lr, wts.ncc.nor, 
+                                       ref = freqWT(clusters.jra),  cluster = WTs.index)
 
 rownames(yearly.diff.freqs.cmip5) <- subsetWT
-colnames(yearly.diff.freqs.cmip5) <- c("JRA", "ERA-20C", "NCEP", CMIP5.names)
+colnames(DJF.diff.freqs.cmip5) <- c(reanalysis, CMIP5.names)
 
 library(RColorBrewer)
 library(gridExtra)
@@ -297,35 +343,35 @@ library(gridExtra)
 
 bias.DJF.cmip5 <- matrix(nrow = nrow(DJF.diff.freqs.cmip5), 
                          ncol = ncol(DJF.diff.freqs.cmip5), 
-                         dimnames = list(subsetWT, c("JRA", "ERA-20C", "NCEP", CMIP5.names)))
+                         dimnames = list(subsetWT, c(reanalysis, CMIP5.names)))
 for(i in 1:ncol(DJF.diff.freqs.cmip5)){
   bias.DJF.cmip5[ ,i] <- DJF.diff.freqs.cmip5[,i]/a[subsetWT]
 }
 
 bias.MAM.cmip5 <- matrix(nrow = nrow(MAM.diff.freqs.cmip5), 
                          ncol = ncol(MAM.diff.freqs.cmip5), 
-                         dimnames = list(subsetWT, c("JRA", "ERA-20C", "NCEP", CMIP5.names)))
+                         dimnames = list(subsetWT, c(reanalysis, CMIP5.names)))
 for(i in 1:ncol(MAM.diff.freqs.cmip5)){
   bias.MAM.cmip5[ ,i] <- MAM.diff.freqs.cmip5[,i]/b[subsetWT]
 }
 
 bias.JJA.cmip5 <- matrix(nrow = nrow(JJA.diff.freqs.cmip5), 
                          ncol = ncol(JJA.diff.freqs.cmip5),
-                         dimnames = list(subsetWT, c("JRA", "ERA-20C", "NCEP", CMIP5.names)))
+                         dimnames = list(subsetWT, c(reanalysis, CMIP5.names)))
 for(i in 1:ncol(JJA.diff.freqs.cmip5)){
   bias.JJA.cmip5[ ,i] <- JJA.diff.freqs.cmip5[,i]/c[subsetWT]
 }
 
 bias.SON.cmip5 <- matrix(nrow = nrow(SON.diff.freqs.cmip5), 
                          ncol = ncol(SON.diff.freqs.cmip5), 
-                         dimnames = list(subsetWT, c("JRA", "ERA-20C", "NCEP", CMIP5.names)))
+                         dimnames = list(subsetWT, c(reanalysis, CMIP5.names)))
 for(i in 1:ncol(SON.diff.freqs.cmip5)){
   bias.SON.cmip5[ ,i] <- SON.diff.freqs.cmip5[,i]/d[subsetWT]
 }
 
 bias.yearly.cmip5 <- matrix(nrow = nrow(yearly.diff.freqs.cmip5), 
                          ncol = ncol(yearly.diff.freqs.cmip5), 
-                         dimnames = list(subsetWT, c("JRA", "ERA-20C", "NCEP", CMIP5.names)))
+                         dimnames = list(subsetWT, c(reanalysis, CMIP5.names)))
 for(i in 1:ncol(yearly.diff.freqs.cmip5)){
   bias.yearly.cmip5[ ,i] <- yearly.diff.freqs.cmip5[,i]/d[subsetWT]
 }
@@ -340,15 +386,18 @@ for(i in 1:ncol(yearly.diff.freqs.cmip5)){
 #                     "MPI-M/MPI-ESM1-2-LR/historical/r1i1p1f1",
 #                     "NCC/NorESM2-LM/historical/r1i1p1f1")
 # 
-# 
 # dataset.cnrm <- "/oceano/gmeteo/WORK/fdezja/2020_CMIP/Data/CMIP6/CMIP6_CNRM-CERFACS_CNRM-CM6-1_historical_r1i1p1f2.ncml"
 # dataset.cccma <- "/oceano/gmeteo/WORK/fdezja/2020_CMIP/Data/CMIP6/CMIP6_CCCma_CanESM5_historical_r1i1p1f1.ncml"
 # dataset.ipsl <- "/oceano/gmeteo/WORK/fdezja/2020_CMIP/Data/CMIP6/CMIP6_IPSL_IPSL-CM6A-LR_historical_r1i1p1f1.ncml"
-# dataset.miroc <- "/oceano/gmeteo/WORK/fdezja/2020_CMIP/Data/CMIP6/CMIP6_MIROC_MIROC6_historical_r1i1p1f1.ncml"
+ dataset.miroc <- "https://data.meteo.unican.es/thredds/dodsC/devel/atlas/cmip6/CMIP/MIROC/MIROC-ES2L/historical/day/cmip6_CMIP_MIROC_MIROC-ES2L_historical_r1i1p1f2_day"
+ "https://data.meteo.unican.es/thredds/dodsC/devel/atlas/cmip6/CMIP/MIROC/MIROC6/historical/day/cmip6_CMIP_MIROC_MIROC6_historical_r1i1p1f1_day"
 # dataset.mohc <- "/oceano/gmeteo/WORK/fdezja/2020_CMIP/Data/CMIP6/CMIP6_MOHC_HadGEM3-GC31-LL_historical_r1i1p1f3.ncml"
 # dataset.mpi <- "/oceano/gmeteo/WORK/fdezja/2020_CMIP/Data/CMIP6/CMIP6_MPI-M_MPI-ESM1-2-LR_historical_r1i1p1f1.ncml"
 # dataset.ncc <- "/oceano/gmeteo/WORK/fdezja/2020_CMIP/Data/CMIP6/CMIP6_NCC_NorESM2-LM_historical_r1i1p1f1.ncml"
-# 
+# dataset.gfdl <- "https://data.meteo.unican.es/thredds/dodsC/devel/atlas/cmip6/CMIP/NOAA-GFDL/GFDL-ESM4/historical/day/cmip6_CMIP_NOAA-GFDL_GFDL-ESM4_historical_r1i1p1f1_day"
+# dataset.ukesm1 <- "https://data.meteo.unican.es/thredds/dodsC/devel/atlas/cmip6/CMIP/MOHC/UKESM1-0-LL/historical/day/cmip6_CMIP_MOHC_UKESM1-0-LL_historical_r1i1p1f2_day"
+# dataset.EC_earth3 <- "https://data.meteo.unican.es/thredds/dodsC/devel/atlas/cmip6/CMIP/EC-Earth-Consortium/EC-Earth3/historical/day/cmip6_CMIP_EC-Earth-Consortium_EC-Earth3_historical_r1i1p1f1_day"
+#
 # di <- dataInventory(dataset)
 # 
 # ipsl.cmip6 <- loadGridData(dataset = dataset.ipsl,
@@ -360,14 +409,14 @@ for(i in 1:ncol(yearly.diff.freqs.cmip5)){
 #                             time = "DD", 
 #                             aggr.d = "mean")
 # 
-# miroc.cmip6 <- loadGridData(dataset = dataset.miroc,
-#                            var = "psl",
-#                            lonLim = lonLim,
-#                            latLim = latLim,
-#                            years = 1981:2010,
-#                            season = c(12,1:11),
-#                            time = "DD", 
-#                            aggr.d = "mean")
+miroc.cmip6 <- loadGridData(dataset = dataset.miroc,
+                           var = "psl",
+                           lonLim = lonLim,
+                           latLim = latLim,
+                           years = 1981:2010,
+                           season = c(12,1:11),
+                           time = "DD",
+                           aggr.d = "mean")
 # mohc.cmip6 <- loadGridData(dataset = dataset.mohc,
 #                            var = "psl",
 #                            lonLim = lonLim,
@@ -392,19 +441,45 @@ for(i in 1:ncol(yearly.diff.freqs.cmip5)){
 #                            season = c(12,1:11),
 #                            time = "DD", 
 #                            aggr.d = "mean")
+gfdl.cmip6 <- loadGridData(dataset = dataset.gfdl,
+                           var = "psl",
+                           lonLim = lonLim,
+                           latLim = latLim,
+                           years = 1981:2010,
+                           season = c(12,1:11),
+                           time = "DD", 
+                           aggr.d = "mean")
+ukesm1.cmip6 <- loadGridData(dataset = dataset.ukesm1,
+                           var = "psl",
+                           lonLim = lonLim,
+                           latLim = latLim,
+                           years = 1981:2010,
+                           season = c(12,1:11),
+                           time = "DD", 
+                           aggr.d = "mean")
+ec_earth.cmip6 <- loadGridData(dataset = dataset.EC_earth3,
+                           var = "psl",
+                           lonLim = lonLim,
+                           latLim = latLim,
+                           years = 1981:2010,
+                           season = c(12,1:11),
+                           time = "DD", 
+                           aggr.d = "mean")
 # 
 # save(cccma.cmip6, cnrm.cmip6, ipsl.cmip6, miroc.cmip6, mohc.cmip6, mpi.cmip6, ncc.cmip6, file = "cmip6_europe.RData")
 # 
 # ### Clustering analysis: 
-# wts.cccma.cmip6 <- clusterGrid(cccma.cmip6, type = "lamb")
-# wts.cnrm.cmip6 <- clusterGrid(cnrm.cmip6, type = "lamb")
-# wts.ipsl.cmip6 <- clusterGrid(ipsl.cmip6, type = "lamb")
-# wts.miroc.cmip6 <- clusterGrid(miroc.cmip6, type = "lamb")
-# wts.mohc.cmip6 <- clusterGrid(mohc.cmip6, type = "lamb")
-# wts.mpi.lr.cmip6 <- clusterGrid(mpi.cmip6, type = "lamb")
-# wts.ncc.nor.cmip6 <- clusterGrid(ncc.cmip6, type = "lamb")
+wts.cccma.cmip6 <- clusterGrid(cccma.cmip6, type = "lamb")
+wts.cnrm.cmip6 <- clusterGrid(cnrm.cmip6, type = "lamb")
+wts.ipsl.cmip6 <- clusterGrid(ipsl.cmip6, type = "lamb")
+wts.miroc.cmip6 <- clusterGrid(miroc.cmip6, type = "lamb")
+wts.ukesm1.cmip6 <- clusterGrid(ukesm1.cmip6, type = "lamb")
+wts.mpi.lr.cmip6 <- clusterGrid(mpi.cmip6, type = "lamb")
+wts.ncc.nor.cmip6 <- clusterGrid(ncc.cmip6, type = "lamb")
+wts.ec_earth.cmip6.cmip6 <- clusterGrid(ec_earth.cmip6, type = "lamb")
+wts.gfdl.cmip6 <- clusterGrid(gfdl.cmip6, type = "lamb")
 # 
-# save(wts.cccma.cmip6, wts.cnrm.cmip6, wts.ipsl.cmip6, wts.miroc.cmip6, wts.mohc.cmip6, wts.mpi.lr.cmip6, wts.ncc.nor.cmip6, file = "wts_cmip6.RData")
+save(wts.cccma.cmip6, wts.cnrm.cmip6, wts.ec_earth.cmip6.cmip6, wts.gfdl.cmip6, wts.ipsl.cmip6, wts.miroc.cmip6, wts.ukesm1.cmip6, wts.mpi.lr.cmip6, wts.ncc.nor.cmip6, file = "wts_cmip6.RData")
 
 load("/oceano/gmeteo/WORK/fdezja/2020_CMIP/Data/WTs_cmip6.RData", verbose = TRUE)
 
@@ -413,35 +488,35 @@ load("/oceano/gmeteo/WORK/fdezja/2020_CMIP/Data/WTs_cmip6.RData", verbose = TRUE
 
 WTs.index <- c(1,18,15,14,16,13,7,17)
 subsetWT <- c("A", "C", "W", "SW", "NW", "S", "AW", "N")
-CMIP6.names <- c("CanESM2", "CNRM-CM5", "HadGEM2-ES", "IPSL-CM5A-MR", "MIROC5", "MPI-ESM-LR", "NorESM1-M")
+CMIP6.names <- CMIP5.names <- c("CanESM2", "CNRM-CM5", "EC-EARTH", "GFDL-ESM2M", "HadGEM2-ES", "IPSL-CM5-LR", "MIROC5",
+                                "MPI-ESM-LR", "NorESM1-M")
 
-DJF.diff.freqs <- relativeFreqWT(wts.cccma.cmip6, wts.cnrm.cmip6, wts.mohc.cmip6, wts.ipsl.cmip6, wts.miroc.cmip6, 
+DJF.diff.freqs <- relativeFreqWT(wts.cccma.cmip6, wts.cnrm.cmip6, wts.ec_earth.cmip6.cmip6, wts.gfdl.cmip6, wts.ukesm1.cmip6, wts.ipsl.cmip6, wts.miroc.cmip6, 
                                  wts.mpi.lr.cmip6, wts.ncc.nor.cmip6, cluster = WTs.index, ref = a, season = DJF)
 
 rownames(DJF.diff.freqs) <- subsetWT
 colnames(DJF.diff.freqs) <- CMIP6.names
 
-MAM.diff.freqs <- relativeFreqWT(wts.cccma.cmip6, wts.cnrm.cmip6, wts.mohc.cmip6, wts.ipsl.cmip6, wts.miroc.cmip6,
+MAM.diff.freqs <- relativeFreqWT(wts.cccma.cmip6, wts.cnrm.cmip6, wts.ec_earth.cmip6.cmip6, wts.gfdl.cmip6, wts.ukesm1.cmip6, wts.ipsl.cmip6, wts.miroc.cmip6, 
                                  wts.mpi.lr.cmip6, wts.ncc.nor.cmip6, cluster = WTs.index, ref = b, season = MAM)
 
 rownames(MAM.diff.freqs) <- subsetWT
 colnames(MAM.diff.freqs) <- CMIP6.names
 
-JJA.diff.freqs <- relativeFreqWT(wts.cccma.cmip6, wts.cnrm.cmip6, wts.mohc.cmip6, wts.ipsl.cmip6, wts.miroc.cmip6,
+JJA.diff.freqs <- relativeFreqWT(wts.cccma.cmip6, wts.cnrm.cmip6, wts.ec_earth.cmip6.cmip6, wts.gfdl.cmip6, wts.ukesm1.cmip6, wts.ipsl.cmip6, wts.miroc.cmip6, 
                                  wts.mpi.lr.cmip6, wts.ncc.nor.cmip6, cluster = WTs.index, ref = c, season = JJA)
 
 rownames(JJA.diff.freqs) <- subsetWT
 colnames(JJA.diff.freqs) <- CMIP6.names
 
-SON.diff.freqs <- relativeFreqWT(wts.cccma.cmip6, wts.cnrm.cmip6, wts.mohc.cmip6, wts.ipsl.cmip6, wts.miroc.cmip6,
+SON.diff.freqs <- relativeFreqWT(wts.cccma.cmip6, wts.cnrm.cmip6, wts.ec_earth.cmip6.cmip6, wts.gfdl.cmip6, wts.ukesm1.cmip6, wts.ipsl.cmip6, wts.miroc.cmip6, 
                                  wts.mpi.lr.cmip6, wts.ncc.nor.cmip6, ref = d, cluster = WTs.index, season = SON)
 
 rownames(SON.diff.freqs) <- subsetWT
 colnames(SON.diff.freqs) <- CMIP6.names
 
-yearly.diff.freqs <- relativeFreqWT(wts.cccma.cmip6, wts.cnrm.cmip6, wts.mohc.cmip6, wts.ipsl.cmip6, wts.miroc.cmip6,
-                                    wts.mpi.lr.cmip6, wts.ncc.nor.cmip6, 
-                                    ref = freqWT(clusters.era.interim),  cluster = WTs.index)
+yearly.diff.freqs <- relativeFreqWT(wts.cccma.cmip6, wts.cnrm.cmip6, wts.ec_earth.cmip6.cmip6, wts.gfdl.cmip6, wts.ukesm1.cmip6, wts.ipsl.cmip6, wts.miroc.cmip6, 
+                                    wts.mpi.lr.cmip6, wts.ncc.nor.cmip6, ref = freqWT(clusters.era.interim),  cluster = WTs.index)
 
 rownames(yearly.diff.freqs) <- subsetWT
 colnames(yearly.diff.freqs) <- CMIP6.names
@@ -506,35 +581,27 @@ for(i in 1:ncol(yearly.diff.freqs)){
 
 ## Relative Bias Data-Frame: 
 
-order.season <- c("DJF","MAM","JJA","SON", "Yearly")
-GCM_evaluation.DF <- data.frame(WT= factor(rep(subsetWT, 20*5),levels = subsetWT),
+order.season <- c("DJF","MAM","JJA","SON", "Year")
+GCM_evaluation.DF <- data.frame(WT= factor(rep(subsetWT, 21*5),levels = subsetWT),
                                 GCM = factor(c(rep(c(rep("NorESM1-M", 8),
                                                rep("MPI-ESM-LR", 8), 
-                                               rep("MIROC5", 8),
-                                               rep("IPSL-CM5A-MR", 8), 
-                                               rep("HadGEM2-ES", 8),
-                                               rep("CNRM-CM5", 8),
-                                               rep("CanESM2", 8)),5),
-                                         rep(c(rep("NorESM1-M", 8),
-                                               rep("MPI-ESM-MR", 8),
-                                               rep("MPI-ESM-LR", 8), 
                                                rep("MIROC5", 8), 
-                                               rep("IPSL-CM5A-MR", 8),
+                                               rep("IPSL-CM5-LR", 8),
                                                rep("HadGEM2-ES", 8), 
                                                rep("GFDL-ESM2M", 8),
                                                rep("EC-EARTH", 8), 
                                                rep("CNRM-CM5", 8), 
-                                               rep("CanESM2", 8),
-                                               rep("NCEP", 8),
+                                               rep("CanESM2", 8)),5*2),
+                                             rep(c(rep("NCEP", 8),
                                                rep("ERA-20C", 8),
-                                               rep("JRA", 8)),5)), levels = c("JRA", "ERA-20C", "NCEP", CMIP5.names[10:1])), 
-                                Experiment = factor(c(rep("CMIP6", 7*8*5), rep("CMIP5", 13*8*5)),levels = c("CMIP6","CMIP5")),
-                                Season = factor(c(rep("DJF",8*7), rep("MAM",8*7), rep("JJA",8*7), rep("SON",8*7), rep("Yearly",8*7),
-                                           rep("DJF",8*13), rep("MAM",8*13), rep("JJA",8*13), rep("SON",8*13), rep("Yearly",8*13)),levels = order.season),
-                                Bias_rel = c(bias.DJF.cmip6[ ,7:1], bias.MAM.cmip6[ ,7:1], 
-                                             bias.JJA.cmip6[,7:1], bias.SON.cmip6[,7:1], bias.yearly.cmip6[ ,7:1],
-                                             bias.DJF.cmip5[,13:1], bias.MAM.cmip5[,13:1], 
-                                             bias.JJA.cmip5[,13:1], bias.SON.cmip5[,13:1],bias.yearly.cmip5[ ,13:1])) 
+                                               rep("JRA", 8)),5)), levels = c(reanalysis, CMIP5.names[9:1])), 
+                                Experiment = factor(c(rep("CMIP6", 9*8*5), rep("CMIP5", 12*8*5)),levels = c("CMIP6","CMIP5")),
+                                Season = factor(c(rep("DJF",8*9), rep("MAM",8*9), rep("JJA",8*9), rep("SON",8*9), rep("Yearly",8*9),
+                                           rep("DJF",8*12), rep("MAM",8*12), rep("JJA",8*12), rep("SON",8*12), rep("Yearly",8*12)),levels = order.season),
+                                Bias_rel = c(bias.DJF.cmip6[ ,9:1], bias.MAM.cmip6[ ,9:1], 
+                                             bias.JJA.cmip6[,9:1], bias.SON.cmip6[,9:1], bias.yearly.cmip6[ ,9:1],
+                                             bias.DJF.cmip5[,12:1], bias.MAM.cmip5[,12:1], 
+                                             bias.JJA.cmip5[,12:1], bias.SON.cmip5[,12:1],bias.yearly.cmip5[ ,12:1])) 
 
 write.csv(GCM_evaluation.DF, file = "GCM_evaluation.csv")
 save(GCM_evaluation.DF, file = "GCM_evaluation.DF.RData")
@@ -551,8 +618,8 @@ save(GCM_evaluation.DF, file = "GCM_evaluation.DF.RData")
 
 ### The mean-square Error (RMSE): 
 
-GCM.cmip5.rmse <- matrix(ncol = 5, nrow = 13, dimnames = list(c("JRA", "ERA-20C", "NCEP", CMIP5.names), order.season))
-GCM.cmip6.rmse <- matrix(ncol = 5, nrow = 7, dimnames = list(CMIP6.names, order.season))
+GCM.cmip5.rmse <- matrix(ncol = 5, nrow = 12, dimnames = list(c(reanalysis, CMIP5.names), order.season))
+GCM.cmip6.rmse <- matrix(ncol = 5, nrow = 9, dimnames = list(CMIP6.names, order.season))
 
 for (i in 1:nrow(GCM.cmip5.rmse)) {
   GCM.cmip5.rmse[i,1] <- rmse(bias.DJF.cmip5[,i])
@@ -570,12 +637,12 @@ for (i in 1:nrow(GCM.cmip6.rmse)) {
 }
 
 #Create GCM.rmse.DF:
-GCM.rmse.DF <- data.frame(GCM = factor(c(rep(c("JRA", "ERA-20C", "NCEP"), 5), rep(CMIP5.names,5) , rep(CMIP6.names,5)), levels = c("JRA", "ERA-20C", "NCEP", CMIP5.names[10:1])),
-                         Experiment = factor(c(rep("Reanalysis", 3*5), rep("CMIP5", 10*5), rep("CMIP6", 7*5)),levels = c("Reanalysis", "CMIP5","CMIP6")),
+GCM.rmse.DF <- data.frame(GCM = factor(c(rep(reanalysis, 5), rep(CMIP5.names,5) , rep(CMIP6.names,5)), levels = c(reanalysis, CMIP5.names[10:1])),
+                         Experiment = factor(c(rep("Reanalysis", 3*5), rep("CMIP5", 9*5), rep("CMIP6", 9*5)),levels = c("Reanalysis", "CMIP5","CMIP6")),
                          Season = factor(c(rep("DJF",3),rep("MAM",3),rep("JJA",3),rep("SON",3), rep("Year",3),
-                                           rep("DJF",10),rep("MAM",10),rep("JJA",10),rep("SON",10), rep("Year",10),
-                                           rep("DJF",7),rep("MAM",7),rep("JJA",7),rep("SON",7), rep("Year",7)), levels = order.season),
-                         RMSE = c(as.vector(GCM.cmip5.rmse[1:3, ]), as.vector(GCM.cmip5.rmse[4:13, ]), as.vector(GCM.cmip6.rmse)))
+                                           rep("DJF",9),rep("MAM",9),rep("JJA",9),rep("SON",9), rep("Year",9),
+                                           rep("DJF",9),rep("MAM",9),rep("JJA",9),rep("SON",9), rep("Year",9)), levels = order.season),
+                         RMSE = c(as.vector(GCM.cmip5.rmse[1:3, ]), as.vector(GCM.cmip5.rmse[4:12, ]), as.vector(GCM.cmip6.rmse)))
 
 save(GCM.rmse.DF, file = "GCM.rmse.RData")
 write.csv(GCM.rmse.DF, file = "GCM.rmse.csv")
@@ -603,15 +670,10 @@ p2 <- lattice::levelplot(RMSE ~ Season + GCM , data = w,
                          colorkey = list(space = 'bottom')) +  
   lattice::xyplot(RMSE ~ Season + GCM , data = w,
                   panel = function(x, y, ...) {
-                    ltext(x = w$Season, y = factor(CMIP5.names, levels = CMIP5.names[10:1]), labels = round(w$RMSE, 2), cex = 0.9, font = 1,
+                    ltext(x = w$Season, y = factor(CMIP5.names, levels = CMIP5.names[9:1]), labels = round(w$RMSE, 2), cex = 0.9, font = 1,
                           fontfamily = "HersheySans")})
 
-v.2 <- matrix(ncol = 5, nrow = 3, dimnames = list(CMIP5.names[c(3,4,9)],order.season))
-GCM.cmip6.rmse <- rbind(GCM.cmip6.rmse, v.2)
-v <- data.frame(GCM = factor(rep(CMIP5.names[c(1,2,5:8,10,3,4,9)],5), levels = CMIP5.names[10:1]),
-                Experiment = rep("CMIP6", 10*5),
-                Season = factor(c(rep("DJF",10),rep("MAM",10),rep("JJA",10),rep("SON",10), rep("Yearly",10)),levels = order.season),
-                RMSE = as.vector(GCM.cmip6.rmse))
+v <- subset(GCM.rmse.DF, Experiment == "CMIP6")
 p3 <- lattice::levelplot(RMSE ~ Season + GCM , data = v,
                          col.regions = pcolors(201),
                          at = seq(0, 0.6, 0.02),
@@ -619,7 +681,7 @@ p3 <- lattice::levelplot(RMSE ~ Season + GCM , data = v,
                          colorkey = list(space = 'bottom')) +  
   lattice::xyplot(RMSE ~ Season + GCM , data = v,
                   panel = function(x, y, ...) {
-                    ltext(x = v$Season, y = v$GCM, labels = round(v$RMSE, 2), cex = 0.9, font = 1,
+                    ltext(x = v$Season, y = factor(CMIP5.names, levels = CMIP5.names[9:1]), labels = round(v$RMSE, 2), cex = 0.9, font = 1,
                           fontfamily = "HersheySans")})
 
 comb_levObj <- c(Reanalysis = p1, CMIP5 = p2, CMIP6 = p3, layout = c(3, 1))
@@ -628,7 +690,7 @@ update(comb_levObj, main = "Root Mean Square Error : GCM & Reanalysis vs ERA-Int
        scales = list(x = list(alternating=3), y = list(rot=0)))
 
   
-# lattice::levelplot(RMSE ~ Season + GCM | Experiment, data = GCM.rmse.DF, 
+  # lattice::levelplot(RMSE ~ Season + GCM | Experiment, data = GCM.rmse.DF, 
 #                     main = "Root Mean Square Error - GCM vs Reanalysis",
 #                     col.regions = pcolo rs(201),
 #                     at = seq(0, 0.6, 0.02),
@@ -639,63 +701,145 @@ update(comb_levObj, main = "Root Mean Square Error : GCM & Reanalysis vs ERA-Int
 
 
 ###### FIGURE 4: Relative Bias 8 ordered WTs: -------------------------------------
-#Yearly ordered:
+#Order GCMs:
 
-rmse.yearly <- subset(GCM.rmse.DF, Season == "Yearly")
-rmse.yearly.order <- rmse.yearly[order(rmse.yearly$RMSE),]
-index <- as.numeric(row.names(rmse.yearly.order))
+indices <- matrix(nrow = 21, ncol = 5, dimnames = list(NULL,order.season))
+# year.order <- vector("numeric", length = 21)
+# DJF.order <- vector("numeric", length = 21)
+# MAM.order <- vector("numeric", length = 21)
+# JJA.order <- vector("numeric", length = 21)
+# SON.order <- vector("numeric", length = 21)
+KL.yearly <- subset(KLdivergence.DF, Season == "Year")
+KL.yearly.order <- KL.yearly[order(KL.yearly$KL),]
+indices[,5] <- as.numeric(row.names(KL.yearly.order))
+KL.DJF <- subset(KLdivergence.DF, Season == "DJF")
+KL.DJF.order <- KL.DJF[order(KL.DJF$KL),]
+indices[,1] <- as.numeric(row.names(KL.DJF.order))
+KL.MAM <- subset(KLdivergence.DF, Season == "MAM")
+KL.MAM.order <- KL.MAM[order(KL.MAM$KL),]
+indices[,2] <- as.numeric(row.names(KL.MAM.order))
+KL.JJA <- subset(KLdivergence.DF, Season == "JJA")
+KL.JJA.order <- KL.JJA[order(KL.JJA$KL),]
+indices[,3] <- as.numeric(row.names(KL.JJA.order))
+KL.SON <- subset(KLdivergence.DF, Season == "SON")
+KL.SON.order <- KL.SON[order(KL.SON$KL),]
+indices[,4] <- as.numeric(row.names(KL.SON.order))
 
-rmse.DJF <- subset(GCM.rmse.DF, Season == "DJF")
-rmse.DJF.order <- rmse.DJF[order(rmse.yearly$RMSE),]
-index.DJF <- as.numeric(row.names(rmse.DJF.order))
-rmse.MAM <- subset(GCM.rmse.DF, Season == "MAM")
-rmse.MAM.order <- rmse.MAM[order(rmse.yearly$RMSE),]
-index.MAM <- as.numeric(row.names(rmse.MAM.order))
-rmse.JJA <- subset(GCM.rmse.DF, Season == "JJA")
-rmse.JJA.order <- rmse.JJA[order(rmse.yearly$RMSE),]
-index.JJA <- as.numeric(row.names(rmse.JJA.order))
-rmse.SON <- subset(GCM.rmse.DF, Season == "SON")
-rmse.SON.order <- rmse.SON[order(rmse.yearly$RMSE),]
-index.SON <- as.numeric(row.names(rmse.SON.order))
+indices.aux <- indices
+
+for(i in 1:length(order.season)){
+  for (j in 1:nrow(indices)) {
+    if(i == 1){ #Es DJF
+      if((indices[j,i] < 70 && indices[j,i] > 60)){ #es CMIP6
+        indices.aux[j,i] <- as.numeric(indices[j,i]) - 48
+      }
+      if((indices[j,i] < 25 && indices[j,i] > 15)){ #es CMIP5
+        indices.aux[j,i] <- indices[j,i] - 15 + 3
+      }
+      if((indices[j,i] < 4 && indices[j,i] > 0)){ #es reanálisis
+        indices.aux[j,i] <- indices[j,i]
+      }
+    }
+    if(i == 2){ #Es MAM
+      if((indices[j,i] < 79 && indices[j,i] > 69)){ #es CMIP6
+        indices.aux[j,i] <- indices[j,i] - 69 + 12
+      }
+      if((indices[j,i] < 34 && indices[j,i] > 24)){ #es CMIP5
+        indices.aux[j,i] <- indices[j,i] - 24 + 3
+      }
+      if((indices[j,i] < 7 && indices[j,i] > 3)){ #es reanálisis
+        indices.aux[j,i] <- indices[j,i] - 3
+      }
+    }
+    if(i == 3){ #Es JJA
+      if((indices[j,i] < 88 && indices[j,i] > 78)){ #es CMIP6
+        indices.aux[j,i] <- indices[j,i] - 78 + 12
+      }
+      if((indices[j,i] < 43 && indices[j,i] > 33)){ #es CMIP5
+        indices.aux[j,i] <- indices[j,i] - 33 + 3
+      }
+      if((indices[j,i] < 10 && indices[j,i] > 6)){ #es reanálisis
+        indices.aux[j,i] <- indices[j,i] -6
+      }
+    }
+    if(i == 4){ #Es SON
+      if((indices[j,i] < 97 && indices[j,i] > 87)){ #es CMIP6
+        indices.aux[j,i] <- indices[j,i] - 87 + 12
+      }
+      if((indices[j,i] < 52 && indices[j,i] > 42)){ #es CMIP5
+        indices.aux[j,i] <- indices[j,i] - 42 + 3
+      }
+      if((indices[j,i] < 13 && indices[j,i] > 9)){ #es reanálisis
+        indices.aux[j,i] <- indices[j,i] - 9
+      }
+    }
+    if(i == 5){ #Es year
+      if((indices[j,i] < 106 && indices[j,i] > 96)){ #es CMIP6
+        indices.aux[j,i] <- indices[j,i] - 96 + 12
+      }
+      if((indices[j,i] < 61 && indices[j,i] > 51)){ #es CMIP5
+        indices.aux[j,i] <- indices[j,i] - 51 + 3
+      }
+      if((indices[j,i] < 16 && indices[j,i] > 12)){ #es reanálisis
+        indices.aux[j,i] <- indices[j,i] - 12
+      }
+    }
+  }
+}
+
+KL.yearly <- subset(KLdivergence.DF, Season == "Year")
+KL.yearly.order <- KL.yearly[order(KL.yearly$KL),]
+index <- as.numeric(row.names(KL.yearly.order))
+
+KL.DJF <- subset(KLdivergence.DF, Season == "DJF")
+KL.DJF.order <- KL.DJF[order(KL.yearly$KL),]
+index.DJF <- as.numeric(row.names(KL.DJF.order))
+KL.MAM <- subset(KLdivergence.DF, Season == "MAM")
+KL.MAM.order <- KL.MAM[order(KL.yearly$KL),]
+index.MAM <- as.numeric(row.names(KL.MAM.order))
+KL.JJA <- subset(KLdivergence.DF, Season == "JJA")
+KL.JJA.order <- KL.JJA[order(KL.yearly$KL),]
+index.JJA <- as.numeric(row.names(KL.JJA.order))
+KL.SON <- subset(KLdivergence.DF, Season == "SON")
+KL.SON.order <- KL.SON[order(KL.yearly$KL),]
+index.SON <- as.numeric(row.names(KL.SON.order))
 
 GCM_evaluation.mat <- cbind(bias.DJF.cmip5[,1:3], bias.MAM.cmip5[,1:3], bias.JJA.cmip5[,1:3], bias.SON.cmip5[,1:3], bias.yearly.cmip5[,1:3], 
-                            bias.DJF.cmip5[,4:13], bias.MAM.cmip5[,4:13], bias.JJA.cmip5[,4:13], bias.SON.cmip5[,4:13], bias.yearly.cmip5[,4:13],
+                            bias.DJF.cmip5[,4:12], bias.MAM.cmip5[,4:12], bias.JJA.cmip5[,4:12], bias.SON.cmip5[,4:12], bias.yearly.cmip5[,4:12],
                             bias.DJF.cmip6[,], bias.MAM.cmip6[,], bias.JJA.cmip6[,], bias.SON.cmip6[,], bias.yearly.cmip6[,])
 pcolors <- RColorBrewer::brewer.pal(n = 9, "RdBu") %>% colorRampPalette()
 
 ### Compute proportion Z-test among GCM-WTs' Freqs and Reanalysis WTs' Freq 
-year.order <- c(3,1,18,9,2,6,7,16,10,19,20,15,4,17,12,5,8,11,14,13)
-DJF.order <- c(3,1,2,9,19,20,6,18,15,17,10,11,5,8,4,7,14,16,12,13)
-MAM.order <- c(1,3,2,6,7,9,11,10,15,16,19,5,8,12,17,13,18,4,14,20)
-JJA.order <- c(3,1,2,6,7,18,12,8,13,16,14,17,9,5,19,10,11,4,15,20)
-SON.order <- c(3,1,2,19,18,6,9,7,10,16,15,17,4,12,11,5,14,13,20,8)
 
-names.cmip5 <- c("CanESM2", "CNRM-CM5", "EC-EARTH", "IPSL-CM5A-MR", "MIROC5",
-                 "HadGEM2-ES", "MPI-ESM-LR", "MPI-ESM-MR", "NorESM1-M", "GFDL-ESM2M")
-names.cmip6 <- c("CanESM5", "CNRM-CM6-1", "IPSL-CM6A-LR", "MIROC6","HadGEM3-GC31-LL", "MPI-ESM1-2-LR", "NorESM2-LM")
-GCM.names.year.order <- c("JRA", "ERA-20C", "NCEP", names.cmip5, names.cmip6)[year.order]
+names.cmip5 <- c("CanESM2", "CNRM-CM5", "EC-EARTH", "GFDL-ESM2M", "HadGEM2-ES", "IPSL-CM5-LR", "MIROC5", "MPI-ESM-LR", "NorESM1-M")
+names.cmip6 <- c("CanESM5", "CNRM-CM6-1","EC-EARTH3", "GFDL-ESM4", "UKESM1-0-LL", "IPSL-CM6A-LR", "MIROC6",  "MPI-ESM1-2-LR", "NorESM2-LM")
+GCM.names.year.order <- c(reanalysis, names.cmip5, names.cmip6)[indices.aux[,5]]
 
 #CROSS seasonal order with year order: 
+names.cmip5.2 <- c("CanESM2", "CNRM-CM5", "EC-EARTH", "GFDL-ESM2M", "HadGEM2-ES", "IPSL-CM5-LR", "MIROC5", "MPI-ESM-LR", "NorESM1-M")
+names.cmip6.2 <- c("CanESM5", "CNRM-CM6-1","EC-EARTH3", "GFDL-ESM4", "UKESM1-0-LL", "IPSL-CM6A-LR", "MIROC6",  "MPI-ESM1-2-LR", "NorESM2-LM")
+GCM.names.2 <- c(reanalysis, names.cmip5.2, names.cmip6.2)
+
 GCM.names <- GCM.names.year.order
-aux <- match(GCM.names.year.order, GCM.names.2[DJF.order])
+aux <- match(GCM.names.year.order, GCM.names.2[indices.aux[,1]])
 GCM.names <- paste0(GCM.names, " (", aux, ",")
-aux <- match(GCM.names.year.order, GCM.names.2[MAM.order])
+aux <- match(GCM.names.year.order, GCM.names.2[indices.aux[,2]])
 GCM.names <- paste0(GCM.names, " ", aux, ",")
-aux <- match(GCM.names.year.order, GCM.names.2[JJA.order])
+aux <- match(GCM.names.year.order, GCM.names.2[indices.aux[,3]])
 GCM.names <- paste0(GCM.names, " ", aux, ",")
-aux <- match(GCM.names.year.order, GCM.names.2[SON.order])
+aux <- match(GCM.names.year.order, GCM.names.2[indices.aux[,4]])
 GCM.names <- paste0(GCM.names, " ", aux, ")")
 
 data <- matrix(t(GCM_evaluation.mat)[index.DJF, ], 
                ncol = ncol(t(GCM_evaluation.mat)[index.DJF, ]), 
                nrow = nrow(t(GCM_evaluation.mat)[index.DJF, ]), 
                dimnames = list(GCM.names.year.order, subsetWT)) %>% t()
-colors.y.p1 <- c(rep("black",2), "blue","red", "black","red","red","blue","red","blue","blue","blue","red","blue","red","red","red","red","blue","red")
-points.p1 <- freqWT.pvalues(data.mat = data, season = DJF, clusters = subsetWT, ref = clusters.era.interim, alpha = 0.05)
-points.p1[ ,2] <- abs(points.p1[ ,2]-21)
+colors.y.p1 <- c(rep("black",2), "black", "blue","red","blue","red","blue","blue","blue","blue","blue","red","red","red","red","blue","red","red","blue","red")
+points.p1 <- freqWT.pvalues(data.mat = data, season = DJF, clusters = subsetWT, ref = clusters.jra, alpha = 0.05)
+points.p1[ ,2] <- abs(points.p1[ ,2]-22)
 colnames(data) <- GCM.names
 colorkey.labels <- c(-1.2, -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2)
-p1 <- lattice::levelplot(data[ ,20:1], 
+p1 <- lattice::levelplot(data[ ,21:1], 
                          xlab = "WTs", ylab = "GCM",
                          col.regions = rev(pcolors(201)), 
                          at = seq(-1.4, 1.4, 0.1),
@@ -704,56 +848,56 @@ p1 <- lattice::levelplot(data[ ,20:1],
                                                      labels = colorkey.labels)),
                          par.settings = list(layout.heights = list(xlab.key.padding = 2)),
                          scales = list(y = list(col = rev(colors.y.p1))) ) +
-  layer(sp.points(SpatialPoints(points.p1), pch= 4, col = 1, cex=2))
+  layer(sp::sp.points(sp::SpatialPoints(points.p1), pch= 4, col = 1, cex=2))
 
 data <- matrix(t(GCM_evaluation.mat)[index.MAM, ], 
                ncol = ncol(t(GCM_evaluation.mat)[index.MAM, ]), 
                nrow = nrow(t(GCM_evaluation.mat)[index.MAM, ]), 
                dimnames = list(GCM.names.year.order, subsetWT)) %>% t()
-points.p2 <- freqWT.pvalues(data.mat = data, season = MAM, clusters = subsetWT, ref = clusters.era.interim, alpha = 0.05)
-points.p2[ ,2] <- abs(points.p2[ ,2]-21)
+points.p2 <- freqWT.pvalues(data.mat = data, season = MAM, clusters = subsetWT, ref = clusters.jra, alpha = 0.05)
+points.p2[ ,2] <- abs(points.p2[ ,2]-22)
 colnames(data) <- GCM.names
 
-p2 <- lattice::levelplot(data[ ,20:1], 
+p2 <- lattice::levelplot(data[ ,21:1], 
                          xlab = "WTs", ylab = "GCM",
                          col.regions = rev(pcolors(201)), 
                          at = seq(-1.4, 1.4, 0.1), 
                          colorkey = list(space = 'left')) +
-  layer(sp.points(SpatialPoints(points.p2), pch= 4, col = 1, cex=2))
+  layer(sp::sp.points(sp::SpatialPoints(points.p2), pch= 4, col = 1, cex=2))
 
 data <- matrix(t(GCM_evaluation.mat)[index.JJA, ], 
                ncol = ncol(t(GCM_evaluation.mat)[index.JJA, ]), 
                nrow = nrow(t(GCM_evaluation.mat)[index.JJA, ]), 
                dimnames = list(GCM.names.year.order, subsetWT)) %>% t()
-points.p3 <- freqWT.pvalues(data.mat = data, season = JJA, clusters = subsetWT, ref = clusters.era.interim, alpha = 0.05)
-points.p3[ ,2] <- abs(points.p3[ ,2]-21)
+points.p3 <- freqWT.pvalues(data.mat = data, season = JJA, clusters = subsetWT, ref = clusters.jra, alpha = 0.05)
+points.p3[ ,2] <- abs(points.p3[ ,2]-22)
 colnames(data) <- GCM.names
 
-p3 <- lattice::levelplot(data[ ,20:1], 
+p3 <- lattice::levelplot(data[ ,21:1], 
                          xlab = "WTs", ylab = "GCM",
                          col.regions = rev(pcolors(201)), 
                          at = seq(-1.4, 1.4, 0.1), 
                          colorkey = list(space = 'left')) +
-  layer(sp.points(SpatialPoints(points.p3), pch= 4, col = 1, cex=2))
+  layer(sp::sp.points(sp::SpatialPoints(points.p3), pch= 4, col = 1, cex=2))
 
 data <- matrix(t(GCM_evaluation.mat)[index.SON, ], 
                ncol = ncol(t(GCM_evaluation.mat)[index.SON, ]), 
                nrow = nrow(t(GCM_evaluation.mat)[index.SON, ]), 
                dimnames = list(GCM.names.year.order, subsetWT)) %>% t()
-points.p4 <- freqWT.pvalues(data.mat = data, season = SON, clusters = subsetWT, ref = clusters.era.interim, alpha = 0.05)
-points.p4[ ,2] <- abs(points.p4[ ,2]-21)
+points.p4 <- freqWT.pvalues(data.mat = data, season = SON, clusters = subsetWT, ref = clusters.jra, alpha = 0.05)
+points.p4[ ,2] <- abs(points.p4[ ,2]-22)
 colnames(data) <- GCM.names
 
-p4 <- lattice::levelplot(data[ ,20:1], 
+p4 <- lattice::levelplot(data[ ,21:1], 
                          xlab = "WTs", ylab = "GCM",
                          col.regions = rev(pcolors(201)), 
                          at = seq(-1.4, 1.4, 0.1),
                          colorkey = list(space = 'left')) +
-  layer(sp.points(SpatialPoints(points.p4), pch= 4, col = 1, cex=2))
+  layer(sp::sp.points(sp::SpatialPoints(points.p4), pch= 4, col = 1, cex=2))
 
 comb_levObj <- c(DJF = p1, MAM = p2, JJA = p3, SON = p4, layout = c(4, 1))
 print(comb_levObj)
-update(comb_levObj, main = "Rel. Bias GCM vs Reanalysis",
+update(comb_levObj, main = "Rel. Bias GCM & Reanalysis vs JRA",
        scales = list(tck = c(1,0), 
                      x = list(alternating=1), 
                      y = list(rot=0, col = rev(colors.y.p1))))
@@ -824,9 +968,9 @@ GCM.names.2 <- c("JRA", "ERA-20C", "NCEP", names.cmip5.2, names.cmip6.2)
 aux <- subset(GCM.rmse.DF.ordered, Season == "DJF")
 data <- matrix(t(GCM.ordered[GCM.DJF, ]), ncol = 20, nrow = 8, 
                dimnames = list( subsetWT, GCM.names.2[DJF.order]))
-colors.y.p1 <- c(rep("black",2), "blue","red", "black","red","red","blue","red","blue","blue","blue","red","blue","red","red","red","red","blue","red")
+colors.y.p1 <- c(rep("black",2), "blue","blue","red", "black","red","blue","blue","blue","red","blue","blue","blue","blue","red","red","red","red","red","red")
 points.p1 <- freqWT.pvalues(data.mat = data, season = DJF, clusters = subsetWT, ref = clusters.era.interim, alpha = 0.05)
-points.p1[ ,2] <- abs(points.p1[ ,2]-21)
+points.p1[ ,2] <- abs(points.p1[ ,2]-22)
 
 p1 <- lattice::levelplot(data[ ,20:1], 
                          xlab = "WTs", ylab = "GCM",

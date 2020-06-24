@@ -1,6 +1,19 @@
 
 ### Helpers
 
+getLWT <- function(grid){
+  wt.names <-c("A", "ANE", "AE", "ASE", "AS", "ASW", "AW", "ANW", "AN",
+               "NE",  "E", "SE",  "S",  "SW",  "W",  "NW",  "N", 
+               "C", "CNE", "CE", "CSE", "CS", "CSW", "CW", "CNW", "CN")
+  
+  out <- attr(x = grid, which = "wt.index") %>% table()
+  out <- out[match(1:26, names(out))]
+  out[which(is.na(out))] <- 0
+  names(out) <- wt.names
+  return(out)
+} 
+
+###########
 
 loadCMIP5 <- function(historical = NULL,
                       rcp8.5 = NULL,
@@ -85,7 +98,9 @@ getLambWTIndex <- function(){
 
 mse <- function(data) { mean(data^2) }
 
-rmse = function(data){ sqrt(mean(data^2)) }
+rmse <- function(data){ sqrt(mean(data^2)) }
+
+divergence <- function(data, ref){ sum(freqs.WTs[,i]*log(freqs.WTs[,i]/erain.WTs)) }
 
 
 freqWT.pvalues <- function(data.mat = NULL, #Matriz donde se colocarán las cruzes
@@ -99,18 +114,15 @@ freqWT.pvalues <- function(data.mat = NULL, #Matriz donde se colocarán las cruz
     ref <- subsetGrid(ref, season = season)
   }
   
-  names.cmip5 <- c("CanESM2", "CNRM-CM5", "EC-EARTH", "IPSL-CM5A-MR", "MIROC5",
-                   "HadGEM2-ES", "MPI-ESM-LR", "MPI-ESM-MR", "NorESM1-M", "GFDL-ESM2M")
-  names.cmip6 <- c("CanESM5", "CNRM-CM6-1", "IPSL-CM6A-LR", "MIROC6","HadGEM3-GC31-LL", "MPI-ESM1-2-LR", "NorESM2-LM")
+  names.cmip5 <- c("CanESM2", "CNRM-CM5", "EC-EARTH", "GFDL-ESM2M", "HadGEM2-ES", "IPSL-CM5-LR", "MIROC5", "MPI-ESM-LR", "NorESM1-M")
+  names.cmip6 <- c("CanESM5", "CNRM-CM6-1","EC-EARTH3", "GFDL-ESM4", "UKESM1-0-LL", "IPSL-CM6A-LR", "MIROC6",  "MPI-ESM1-2-LR", "NorESM2-LM")
   GCM.names <- c("JRA", "ERA-20C", "NCEP", names.cmip5, names.cmip6)
   models <- c("clusters.jra","clusters.era20","clusters.ncep",
-              "wts.cccma", "wts.cnrm", "wts.EC.earth",
-              "wts.ipsl", "wts.miroc", "wts.mohc",
-              "wts.mpi.esm.lr", "wts.mpi.esm.mr",
-              "wts.ncc.nor", "wts.noaa.gfdl",
-              "wts.cccma.cmip6", "wts.cnrm.cmip6", 
-              "wts.ipsl.cmip6", "wts.miroc.cmip6", "wts.mohc.cmip6",
-              "wts.mpi.lr.cmip6", "wts.ncc.nor.cmip6")
+              "wts.cccma", "wts.cnrm", "wts.EC.earth", "wts.noaa.gfdl",
+              "wts.mohc", "wts.ipsl", "wts.miroc", "wts.mpi.esm.lr","wts.ncc.nor",
+              "wts.cccma.cmip6", "wts.cnrm.cmip6", "wts.ec_earth.cmip6.cmip6",
+              "wts.gfdl.cmip6", "wts.ukesm1.cmip6", "wts.ipsl.cmip6",
+              "wts.miroc.cmip6", "wts.mpi.lr.cmip6", "wts.ncc.nor.cmip6")
   
   season.freqs.matrix <- matrix(nrow = length(models), ncol = length(clusters), 
                                 dimnames = list(GCM.names, clusters))
