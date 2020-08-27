@@ -38,9 +38,9 @@ TPMS <- function(obs.wt.grid,
                  conf.level = .05,
                  include.nonexisting = TRUE) {
     stopifnot(is.logical(include.nonexisting))
-    tprob.matrix = transitionProb(gcm.wt.grid)
+    tprob.matrix = transitionProb(gcm.wt.grid, missing.to.zero = TRUE)
     pval.matrix = transitionProb.test(obs.grid = obs.wt.grid, gcm.grid =  gcm.wt.grid, conf.level = conf.level)
-    tprob.ref = transitionProb(obs.wt.grid)
+    tprob.ref = transitionProb(obs.wt.grid, missing.to.zero = TRUE)
     gcm.wt.grid <- obs.wt.grid <- NULL
     sig <- new <- missing <- 0 
     # Significantly different transition probabilities
