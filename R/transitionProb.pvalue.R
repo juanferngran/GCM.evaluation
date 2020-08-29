@@ -1,6 +1,5 @@
 #' @title Proportion Z-test for WT transition probabilities
-#' @description A wrapper of prop.test to assess the significance of WT transition probability 
-#' resemblance between GCM and reanalysis
+#' @description A wrapper of prop.test to assess the significance of WT transition probability between GCM and reanalysis
 #' @param obs.grid Cluster grid of observations (reanalysis)
 #' @param gcm.grid Cluster grid of GCM simulation 
 #' @param what Parameter to be returned. Default to \code{"p.value"}, returning the p-value of the test.
@@ -40,21 +39,16 @@
 
 transitionProb.test <- function(obs.grid, gcm.grid, what = "p.value", ...) {
     arg.list  <- list(...)
-
     wts.obs <- getWT(obs.grid)
     wts.gcm <- getWT(gcm.grid)
-    if (is.null(wts.obs) | is.null(wts.gcm)) stop("Input is not a clustering grid")
+    if (is.null(wts.obs) | is.null(wts.gcm)) stop("Input is not a cluster grid")
     obs.grid <- gcm.grid <- NULL
     what <- match.arg(what, choices = c("statistic", "parameter", "p.value", "estimate"))
-    
     wto1 <- wts.obs[-length(wts.obs)]
     wto2 <- wts.obs[-1]
-    
     wtp1 <- wts.gcm[-length(wts.gcm)]
     wtp2 <- wts.gcm[-1]
-    
-    # compute all transition probabilities as a vector
-    
+    # compute all transition probabilities as a vector (cross.freqs*)
     tlabels <- paste(names(wto1), names(wto2), sep = "-->")
     cross.freqs.obs <- table(tlabels) 
     wtnames.obs <- unique(names(wts.obs))
@@ -67,50 +61,53 @@ transitionProb.test <- function(obs.grid, gcm.grid, what = "p.value", ...) {
     wtnames.ref <- c("A", "C", "SW", "W", "AW", "NW", "S", "ASW", "N", "ANW",
                      "SE", "CSW", "CS", "E", "NE", "AS", "CSE", "AN", "CW",
                      "CN", "CNW", "ASE", "CNE", "CE", "AE", "ANE")
-    
-    ind.order <- match(wtnames.ref, wtnames.obs)
+    ind.order <- match(wtnames.ref, wtnames.obs) %>% na.omit()
     wtnames.obs <- wtnames.obs[ind.order]
     
-    ind.order <- match(wtnames.ref, wtnames.gcm)
+    ind.order <- match(wtnames.ref, wtnames.gcm) %>% na.omit()
     wtnames.gcm <- wtnames.gcm[ind.order]
     
-    # Include missing transitions with zero probability
-    
-    ref <- expand.grid(wtnames.obs, wtnames.obs)
+    # Include missing transitions with zero probability in observations
+    ref <- expand.grid(wtnames.ref, wtnames.ref)
     allcombs <- paste(ref[ ,1], ref[ ,2], sep = "-->")
-    namesaux <- allcombs[which(!(allcombs %in% names(cross.freqs.obs)))]
-    aux <- rep(0, length(namesaux))
-    names(aux) <- namesaux
+    not.in.obs <- which(!(allcombs %in% names(cross.freqs.obs)))
+    namesaux.obs <- allcombs[not.in.obs]
+    aux <- rep(0, length(namesaux.obs))
+    names(aux) <- namesaux.obs
     all.freqs.obs <- append(cross.freqs.obs, aux)
     
-    ref <- expand.grid(wtnames.gcm, wtnames.gcm)
-    allcombs <- paste(ref[ ,1], ref[ ,2], sep = "-->")
-    namesaux <- allcombs[which(!(allcombs %in% names(cross.freqs.gcm)))]
-    aux <- rep(0, length(namesaux))
-    names(aux) <- namesaux
+    # Include missing transitions with zero probability in GCM
+    # ref <- expand.grid(wtnames.gcm, wtnames.gcm)
+    # allcombs <- paste(ref[ ,1], ref[ ,2], sep = "-->")
+    not.in.gcm <- which(!(allcombs %in% names(cross.freqs.gcm)))
+    namesaux.gcm <- allcombs[not.in.gcm]
+    aux <- rep(0, length(namesaux.gcm))
+    names(aux) <- namesaux.gcm
     all.freqs.gcm <- append(cross.freqs.gcm, aux)
     
-    # Compute matrix of proportion Z-test results
-    
-    mat <- sapply(1:length(wtnames.obs), function(i) {
-        wt <- wtnames.obs[i]
+    # Compute matrix of proportion Z-test results for all possible transitions
+    mat <- sapply(1:length(wtnames.ref), function(i) {
+        wt <- wtnames.ref[i]
         all.freqs.from.obs <- all.freqs.obs[grep(paste0("^", wt, "-->"), names(all.freqs.obs))]
         all.freqs.from.gcm <- all.freqs.gcm[grep(paste0("^", wt, "-->"), names(all.freqs.gcm))]
         nobs <- sum(all.freqs.from.obs)
         nsim <- sum(all.freqs.from.gcm)
         arg.list[["n"]] <- c(nobs, nsim)
         a <- sapply(names(all.freqs.from.obs), USE.NAMES = TRUE, function(j) {
+            # tofreq <- ifelse(is.na(all.freqs.from.gcm[j]), 0, all.freqs.from.gcm[j])
             arg.list[["x"]] <- c(all.freqs.from.obs[j], all.freqs.from.gcm[j])
-            suppressWarnings({
-                do.call("prop.test", args = arg.list) %>% extract2(what)
-            })
+            tryCatch(expr = {
+                suppressWarnings({# NaN is returned when the 'to' state does not occur
+                    do.call("prop.test", args = arg.list) %>% extract2(what)
+                })
+            }, error = function(err) NaN)
         })
-        ind <- match(paste(wt, wtnames.obs, sep = "-->"), names(a))
+        ind <- match(paste(wt, wtnames.ref, sep = "-->"), names(a))
         # print(ind)
         return(a[ind])
     })
     mat <- t(mat)
-    colnames(mat) <- rownames(mat) <- wtnames.obs
+    colnames(mat) <- rownames(mat) <- wtnames.ref
     return(mat)
 }
 
