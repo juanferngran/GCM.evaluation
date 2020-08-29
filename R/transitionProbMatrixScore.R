@@ -15,7 +15,7 @@
 #' By default (\code{include.nonexisting = FALSE}), the summary measure is the summation of the absolute differences
 #' between model and reanalysis transition probabilities, considering only those model transitions that are
 #' significantly different from the observation (reanalysis). This choice will only consider the transition
-#' probabilities that exist bot in the GCM and the reanalysis, thus not accounting for the "missing" transitions, 
+#' probabilities that exist both in the GCM and the reanalysis, thus not accounting for the "missing" transitions, 
 #' i.e.: either transitions that exist in the reanalysis but are never simulated by the model,
 #' or transitions that are simulated by the model but never happen in the reanalysis.
 #' 
@@ -38,9 +38,9 @@ TPMS <- function(obs.wt.grid,
                  conf.level = .05,
                  include.nonexisting = TRUE) {
     stopifnot(is.logical(include.nonexisting))
-    tprob.matrix = transitionProb(gcm.wt.grid, missing.to.zero = TRUE)
+    tprob.matrix = transitionProb(gcm.wt.grid, missing.to.zero = FALSE)
     pval.matrix = transitionProb.test(obs.grid = obs.wt.grid, gcm.grid =  gcm.wt.grid, conf.level = conf.level)
-    tprob.ref = transitionProb(obs.wt.grid, missing.to.zero = TRUE)
+    tprob.ref = transitionProb(obs.wt.grid, missing.to.zero = FALSE)
     gcm.wt.grid <- obs.wt.grid <- NULL
     sig <- new <- missing <- 0 
     # Significantly different transition probabilities
